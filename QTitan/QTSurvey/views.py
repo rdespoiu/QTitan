@@ -45,7 +45,40 @@ def register(request):
 
 def login(request):
     template = loader.get_template('QTSurvey/login.html')
-    return HttpResponse(template.render(request))
+
+    form = UserLoginForm(request.POST or None)
+
+    print('\n\nform valid: {}\n\n'.format(form.is_valid()))
+    print(form)
+    print('\n\n')
+
+    if form.is_valid():
+        username = form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password")
+        user = authenticate(username = username, password = password)
+        print(user)
+        input()
+        login(user)
+
+        print('{}'.format('*' * 30))
+        print('User authenticated ', request.user.is_authenticated())
+        print('{}'.format('*' * 30))
+
+        return redirect('surveys')
+
+    context = {'form': form}
+
+    return HttpResponse(template.render(context, request))
+    
+
+def logout_view (request):
+    return render(request, 'form.html',{})
+
+
+
+
+
+
 
 def surveys(request):
     context = testContext()
@@ -94,21 +127,3 @@ def create_survey(request):
     template = loader.get_template('QTSurvey/create-survey.html')
 
     return HttpResponse(template.render(context, request))
-
-def login_view (request):
-    title = "Login"
-    print(request.user.is_authenticated())
-    form = UserLoginForm(request.POST or None)
-    if form.is_valid():
-        username = form.cleaned_data.get("username")
-        password = form.cleaned_data.get("password")
-        user = authenticate(username = username, password= password)
-        login(request, user)
-        print(request.user.is_authenticated())
-        #return redirect('index') #sends user to index page
-        return HttpResponse("Welcome "+username)
-
-    return render(request, 'index.html',{"form":form,"title":title})
-
-def logout_view (request):
-    return render(request, 'form.html',{})

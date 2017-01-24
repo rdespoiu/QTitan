@@ -1,11 +1,20 @@
 <div class="login-box">
-  <form>
-    <input type="text" class="form-control login-form" id="email" placeholder="username">
-    <input type="password" class="form-control login-form" id="password" placeholder="password">
-    <button type="submit" class="btn btn-primary btn-block custom-button login-form">login</button>
+  <form method = "POST" action = "" name="form-login">
+    {% csrf_token %}
+    <input type="text" class="form-control login-form" id="user" placeholder="username" name="username">
+    <input type="password" class="form-control login-form" id="pass" name="password" placeholder="password">
+    <button type="submit" value="Login" class="btn btn-primary btn-block custom-button login-form">login</button>
     <div class="login-register-forgot">
       <a href="../register">Register</a><br>
       <a href="#">Forgot Password</a>
     </div>
   </form>
 </div>
+
+
+
+  <!--
+  <p>{{form.username.errors.as_text}}</p>
+  <p>{{form.password.errors.as_text}}</p>
+  <input type="submit" value="Login">
+  -->
