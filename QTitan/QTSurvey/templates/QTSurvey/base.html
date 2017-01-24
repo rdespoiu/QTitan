@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    {% include "QTSurvey/head.html" %}
+  </head>
+  <body class="qt-body">
+    <div class="container-fluid">
+      <!-- HEADER -->
+      {% block header %}
+        {% include "QTSurvey/header.html" %}
+      {% endblock %}
+
+      <!-- LOGIN -->
+      {% block login_box %}
+      {% endblock %}
+
+      <!-- REGISTRATION -->
+      {% block registration_box %}
+      {% endblock %}
+
+      <!-- MAIN NAV BAR -->
+      <!--
+      block main_nav:
+        * Navigation bar with cases for both user roles.
+        * If user is a researcher -> include navbar-researcher.html with links populated
+        * Else if user is a subject -> include navbar-subject.html with links populated
+        * If no user is logged in, this will NOT display
+      -->
+      {% block main_nav %}
+        {% if loggedInUser %}
+          {% if loggedInUser.rsflag %}
+            {% include "QTSurvey/navbar-researcher.html" %}
+          {% else %}
+            {% include "QTSurvey/navbar-subject.html" %}
+          {% endif %}
+        {% endif %}
+      {% endblock %}
+
+      <!-- MAIN TABLE -->
+      {% block main_table %}
+      {% endblock %}
+
+      {% block create_survey %}
+      {% endblock %}
+    </div>
+
+
+
+    <!-- BODY SCRIPTS -->
+    {% include "QTSurvey/body-scripts.html" %}
+  </body>
+</html>

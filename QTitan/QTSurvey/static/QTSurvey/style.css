@@ -1,0 +1,239 @@
+{ margin: 0; padding: 0; }
+
+html {
+  background: url('images/bg.png') no-repeat center center fixed;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.qt-body {
+  background: transparent;
+  color: white;
+  font-family: 'Raleway', sans-serif;
+}
+
+.qtitan-header img {
+  width: 25%;
+  height: 25%;
+}
+
+.nav-top-buffer {
+  margin-top: 4%;
+}
+
+.table-top-buffer {
+  margin-top: 2%;
+}
+
+.navigation-link a {
+  color: white;
+  font-size: 1.5em;
+  opacity: 0.6;
+}
+
+.navigation-link a:hover {
+  opacity: 1.0;
+  text-decoration: none;
+}
+
+.custom-button {
+  font-size: 1.5em;
+  opacity: 0.8;
+  background-color: #343F46;
+  border-color: #343F46;
+}
+
+.custom-text {
+  font-size: 1.5em;
+}
+
+.active-underline {
+  text-decoration: underline;
+}
+
+#mydiv > .btn-default {
+  background:transparent;
+}
+
+
+
+/* CREATE SURVEY FORM */
+
+.create-survey-box form {
+  background: transparent;
+  position: absolute;;
+  width: 50%;
+  height: 40%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.create-survey-box form input {
+  background-color: #212121;
+  opacity: 0.8;
+}
+
+.create-survey-box form input:focus {
+  opacity: 1.0;
+  outline: none;
+  box-shadow: none;
+}
+
+.create-survey-box textarea {
+  background-color: #212121;
+  opacity: 0.8;
+}
+
+.create-survey-box textarea:focus {
+  opacity: 1.0;
+  outline: none;
+  box-shadow: none;
+}
+
+.create-survey-box form a {
+  opacity: 0.6;
+  color: white;
+  font-size: 1.5em;
+}
+
+.create-survey-box form a:hover {
+  opacity: 1.0;
+  text-decoration: none;
+}
+
+.create-survey-form {
+  height: 14.25%;
+  font-size: 1.5em;
+  text-align: center;
+  border: transparent;
+}
+
+.create-survey-box .options-wrapper {
+
+}
+
+.create-survey-box .options-wrapper .survey-option {
+  text-align: center;
+  height: 200%;
+  font-size: 1.5em;
+}
+
+.create-survey-box .options-wrapper button {
+  height: 300%;
+}
+
+
+.survey-option {
+  width: 92%;
+  font-size: 1em;
+  display: inline-block;
+  height: 100%;
+  border: transparent;
+}
+
+.add-more {
+  background-color: #343F46;
+  border-color: #343F46;
+  height: 100%;
+  width: 7%;
+
+}
+
+
+
+/* REGISTRATION FORM */
+
+.registration-box form {
+  background: transparent;
+  position: absolute;;
+  width: 50%;
+  height: 40%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.registration-box form input {
+  background-color: #212121;
+  opacity: 0.8;
+}
+
+.registration-box form input:focus {
+  opacity: 1.0;
+  outline: none;
+  box-shadow: none;
+}
+
+.registration-box form a {
+  opacity: 0.6;
+  color: white;
+  font-size: 1.5em;
+}
+
+.registration-box form a:hover {
+  opacity: 1.0;
+  text-decoration: none;
+}
+
+.registration-form {
+  height: 14.25%;
+  font-size: 1.5em;
+  text-align: center;
+  border: transparent;
+}
+
+
+
+/* LOGIN FORM */
+
+.login-box form {
+  background: transparent;
+  position: absolute;
+  width: 25%;
+  height: 20%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.login-box form a {
+  opacity: 0.6;
+  color: white;
+}
+
+.login-box form a:hover {
+  opacity: 1.0;
+  text-decoration: none;
+}
+
+.login-register-forgot {
+  text-align: center;
+}
+
+.login-box form input {
+  background-color: #212121;
+  opacity: 0.8;
+}
+
+.login-box form input:focus {
+  opacity: 1.0;
+  outline: none;
+  box-shadow: none;
+}
+
+.login-form {
+  height: 33%;
+  font-size: 1.5em;
+  text-align: center;
+  border: transparent;
+}

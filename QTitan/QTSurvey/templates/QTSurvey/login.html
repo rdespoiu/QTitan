@@ -1,0 +1,12 @@
+<!-- Inheritance from base template -->
+{% extends "QTSurvey/base.html" %}
+
+<!--
+block login_box:
+  * Login box when there is no logged in user.
+  * Change if statement to check for logged in user.
+  * If no user is logged in, this will display
+-->
+{% block login_box %}
+  {% include "QTSurvey/login-box.html" %}
+{% endblock %}

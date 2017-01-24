@@ -1,0 +1,17 @@
+{% load static %}
+<div class="row">
+  <!-- LOGO: Static on all pages -->
+  <div class="col-md-11 qtitan-header" style="padding-top: 10px;"><img src="{% static 'QTSurvey/images/logo.png' %}"></div>
+  <!-- User dropdown -->
+  <!--
+  block user_Main:
+    * Dropdown for logged in user
+    * The include statement is where the dropdown template will be rendered.
+    * If a user is not logged in, the dropdown will not display
+  -->
+  {% block user_Main %}
+    {% if loggedInUser %}
+      {% include "QTSurvey/user-dropdown.html" with user_firstName=loggedInUser.firstname user_profile_url="http://www.google.com" logout_url="http://www.reddit.com" %}
+    {% endif %}
+  {% endblock %}
+</div>
