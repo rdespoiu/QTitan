@@ -8,4 +8,5 @@ from . import views
 # URL Configuration
 urlpatterns = [
     url(r'^$', views.index, name = 'index'),
+    url(r'^login/',views.login_view, name = 'login')
 ]
