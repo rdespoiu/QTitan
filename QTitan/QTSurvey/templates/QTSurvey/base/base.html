@@ -2,13 +2,13 @@
 <html lang="en">
   <head>
     {% load static %}
-    {% include "QTSurvey/head.html" %}
+    {% include "QTSurvey/base/head.html" %}
   </head>
   <body class="qt-body">
     <div class="container-fluid">
       <!-- HEADER -->
       {% block header %}
-        {% include "QTSurvey/header.html" %}
+        {% include "QTSurvey/base/header.html" %}
       {% endblock %}
 
       <!-- LOGIN -->
@@ -28,13 +28,7 @@
         * If no user is logged in, this will NOT display
       -->
       {% block main_nav %}
-        {% if loggedInUser %}
-          {% if loggedInUser.rsflag %}
-            {% include "QTSurvey/navbar-researcher.html" %}
-          {% else %}
-            {% include "QTSurvey/navbar-subject.html" %}
-          {% endif %}
-        {% endif %}
+        {% include "QTSurvey/modules/navbar-researcher.html" %}
       {% endblock %}
 
       <!-- MAIN TABLE -->
@@ -48,6 +42,6 @@
 
 
     <!-- BODY SCRIPTS -->
-    {% include "QTSurvey/body-scripts.html" %}
+    {% include "QTSurvey/base/body-scripts.html" %}
   </body>
 </html>

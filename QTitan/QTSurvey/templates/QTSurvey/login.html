@@ -1,5 +1,5 @@
 <!-- Inheritance from base template -->
-{% extends "QTSurvey/base.html" %}
+{% extends "QTSurvey/base/base.html" %}
 
 <!--
 block login_box:
@@ -8,5 +8,5 @@ block login_box:
   * If no user is logged in, this will display
 -->
 {% block login_box %}
-  {% include "QTSurvey/login-box.html" %}
+  {% include "QTSurvey/modules/login-box.html" %}
 {% endblock %}

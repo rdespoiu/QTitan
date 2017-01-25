@@ -1,10 +1,10 @@
 <!-- Inheritance from base template -->
-{% extends "QTSurvey/base.html" %}
+{% extends "QTSurvey/base/base.html" %}
 
 <!--
 block main_table:
   * Main data table (surveys, analytics, subjects, etc.)
 -->
 {% block main_table %}
-  {% include "QTSurvey/table_main.html" with page="subject_available_surveys" %}
+  {% include "QTSurvey/modules/table_main.html" with page="subject_available_surveys" %}
 {% endblock %}
