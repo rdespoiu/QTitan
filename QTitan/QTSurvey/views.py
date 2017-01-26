@@ -13,18 +13,17 @@ from django.shortcuts import redirect
 # Index only redirects. If there is no user session, redirect to login page.
 # If there IS a session, redirect to 'surveys'
 def index(request):
-    context = {}
-
-    if not context.get('loggedInUser'):
-        return redirect('login')
-    else:
+    if request.user.is_authenticated():
         return redirect('surveys')
+    else:
+        return redirect('login')
 
 # Registration
 def register(request):
     template = loader.get_template('QTSurvey/register.html')
     return HttpResponse(template.render(request))
 
+'''
 def login(request):
     template = loader.get_template('QTSurvey/login.html')
     form = UserLoginForm(request.POST or None)
@@ -50,7 +49,7 @@ def login(request):
     context = {'form': form}
 
     return HttpResponse(template.render(context, request))
-
+'''
 
 def logout_view (request):
     return render(request, 'form.html',{})

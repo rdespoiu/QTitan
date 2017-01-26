@@ -28,7 +28,9 @@
         * If no user is logged in, this will NOT display
       -->
       {% block main_nav %}
-        {% include "QTSurvey/modules/navbar-researcher.html" %}
+        {% if user.is_authenticated %}
+          {% include "QTSurvey/modules/navbar-researcher.html" %}
+        {% endif %}
       {% endblock %}
 
       <!-- MAIN TABLE -->

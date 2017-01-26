@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Redirection after successful login
+LOGIN_REDIRECT_URL = 'index'
 
 # Application definition
 
