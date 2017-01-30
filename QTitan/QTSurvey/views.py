@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from django.template import loader
 from django.template.response import TemplateResponse
 from django.contrib.auth import (authenticate, get_user_model, login, logout,)
-from .forms import UserLoginForm
+from .forms import UserForm
 from django.shortcuts import redirect
+
 
 
 # Views
@@ -20,8 +21,19 @@ def index(request):
 
 # Registration
 def register(request):
+    form = UserForm(request.POST)
     template = loader.get_template('QTSurvey/register.html')
-    return HttpResponse(template.render(request))
+    
+    if request.method == 'POST':   
+        if form.is_valid():
+            user = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user.set_password(password)
+            user.save()
+            return redirect('login')
+    context = {'form':form}
+    return HttpResponse(template.render(context,request))
 
 '''
 def login(request):
