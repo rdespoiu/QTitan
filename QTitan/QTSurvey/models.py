@@ -1,17 +1,10 @@
 # Django Imports
 from django.db import models
+from django.contrib.auth.models import User
 
 #############
 # DB Models #
 #############
-
-# Users
-# RSFlag designates researcher. False by default, so when users register they will automatically be subjects. Researchers are manually added
-class User(models.Model):
-    RSFlag = models.BooleanField(default = False)
-    email = models.CharField(max_length = 80)
-    password = models.CharField(max_length = 128)
-    salt = models.CharField(max_length = 128)
 
 # Demographics common to all users (researchers/subjects)
 class BaseDemographic(models.Model):
