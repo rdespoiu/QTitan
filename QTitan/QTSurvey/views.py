@@ -35,7 +35,8 @@ def register(request):
             user.set_password(password)
             user.save()
             return redirect('login')
-    context = {'form':form}
+
+    context = {'request': request, 'form': form}
     return HttpResponse(template.render(context,request))
 
 # Surveys (Researcher/Subject)
@@ -46,7 +47,9 @@ def surveys(request):
     template = loader.get_template('QTSurvey/researcher-surveys.html')
     template = loader.get_template('QTSurvey/subject-available-surveys.html')
 
-    return HttpResponse(template.render(request))
+    context = {'request': request}
+
+    return HttpResponse(template.render(context, request))
 
 # Analytics (Researcher)
 def researcher_analytics(request):
@@ -55,7 +58,9 @@ def researcher_analytics(request):
 
     template = loader.get_template('QTSurvey/researcher-analytics.html')
 
-    return HttpResponse(template.render(request))
+    context = {'request': request}
+
+    return HttpResponse(template.render(conext, request))
 
 # Subject View (Researcher)
 def researcher_subjects(request):
@@ -64,7 +69,9 @@ def researcher_subjects(request):
 
     template = loader.get_template('QTSurvey/researcher-subjects.html')
 
-    return HttpResponse(template.render(request))
+    context = {'request': request}
+
+    return HttpResponse(template.render(context, request))
 
 # Completed Surveys (Subject)
 def subject_completed_surveys(request):
@@ -73,7 +80,9 @@ def subject_completed_surveys(request):
 
     template = loader.get_template('QTSurvey/subject-completed-surveys.html')
 
-    return HttpResponse(template.render(request))
+    context = {'request': request}
+
+    return HttpResponse(template.render(context, request))
 
 # Create Survey (Researcher)
 def create_survey(request):
@@ -82,4 +91,6 @@ def create_survey(request):
 
     template = loader.get_template('QTSurvey/create-survey.html')
 
-    return HttpResponse(template.render(request))
+    context = {'request': request}
+
+    return HttpResponse(template.render(context, request))

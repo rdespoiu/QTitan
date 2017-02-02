@@ -1,6 +1,6 @@
 <div class="registration-box">
   <form method = "POST" action = "" name="form-register">
-  	{% csrf_token %}	
+  	{% csrf_token %}
   	<input type="text" class="form-control login-form" id="user" placeholder="username" name="username">
     <input type="text" class="form-control registration-form" id="email-address" placeholder="email" name = "email">
     <input type="password" class="form-control registration-form" id="password1" placeholder="password" name = "password">
@@ -13,6 +13,5 @@
     <div class="login-register-forgot">
       <a href="../login">Back to login</a><br>
     </div>
-
   </form>
 </div>
