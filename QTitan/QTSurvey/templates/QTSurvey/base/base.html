@@ -28,7 +28,13 @@
         * If no user is logged in, this will NOT display
       -->
       {% block main_nav %}
-        {% include "QTSurvey/modules/navbar-researcher.html" %}
+        {% if request.user.is_authenticated %}
+          {% if request.session.researcher %}
+            {% include "QTSurvey/modules/navbar-researcher.html" %}
+          {% else %}
+            {% include "QTSurvey/modules/navbar-subject.html" %}
+          {% endif %}
+        {% endif %}
       {% endblock %}
 
       <!-- MAIN TABLE -->
@@ -38,8 +44,6 @@
       {% block create_survey %}
       {% endblock %}
     </div>
-
-
 
     <!-- BODY SCRIPTS -->
     {% include "QTSurvey/base/body-scripts.html" %}

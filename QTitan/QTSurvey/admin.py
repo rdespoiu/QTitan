@@ -1,11 +1,13 @@
 from django.contrib import admin
-from .models import \
-                    BaseDemographic,    \
-                    CustomDemographic,  \
-                    Survey,             \
-                    SurveyField,        \
-                    CompletedSurvey,    \
-                    SurveyAccess
+
+from .models import (
+    BaseDemographic,
+    CustomDemographic,
+    Survey,
+    SurveyField,
+    CompletedSurvey,
+    SurveyAccess
+)
 
 # Model registration
 admin.site.register(BaseDemographic)
