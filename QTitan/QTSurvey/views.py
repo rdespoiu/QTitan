@@ -6,7 +6,7 @@ from django.template.response import TemplateResponse
 from django.contrib.auth import (authenticate, get_user_model, login, logout,)
 from .forms import UserForm
 from django.shortcuts import redirect
-
+from .models import *
 
 
 # Views
@@ -21,10 +21,13 @@ def index(request):
 
 # Registration
 def register(request):
+    if request.user.is_authenticated():
+        return redirect('index')
+
     form = UserForm(request.POST)
     template = loader.get_template('QTSurvey/register.html')
-    
-    if request.method == 'POST':   
+
+    if request.method == 'POST':
         if form.is_valid():
             user = form.save(commit=False)
             username = form.cleaned_data['username']
@@ -35,67 +38,48 @@ def register(request):
     context = {'form':form}
     return HttpResponse(template.render(context,request))
 
-'''
-def login(request):
-    template = loader.get_template('QTSurvey/login.html')
-    form = UserLoginForm(request.POST or None)
-
-    print('\n\nform valid: {}\n\n'.format(form.is_valid()))
-    print(form)
-    print('\n\n')
-
-    if form.is_valid():
-        username = form.cleaned_data.get("username")
-        password = form.cleaned_data.get("password")
-        user = authenticate(username = username, password = password)
-        print(user)
-        input()
-        login(user)
-
-        print('{}'.format('*' * 30))
-        print('User authenticated ', request.user.is_authenticated())
-        print('{}'.format('*' * 30))
-
-        return redirect('surveys')
-
-    context = {'form': form}
-
-    return HttpResponse(template.render(context, request))
-'''
-
-def logout_view (request):
-    return render(request, 'form.html',{})
-
-
-
-
-
-# delete this import
-import random
+# Surveys (Researcher/Subject)
 def surveys(request):
-    if random.randint(0,1) == 1:
-        template = loader.get_template('QTSurvey/researcher-surveys.html')
-    else:
-        template = loader.get_template('QTSurvey/subject-available-surveys.html')
+    if not request.user.is_authenticated():
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/researcher-surveys.html')
+    template = loader.get_template('QTSurvey/subject-available-surveys.html')
 
     return HttpResponse(template.render(request))
 
+# Analytics (Researcher)
 def researcher_analytics(request):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
+
     template = loader.get_template('QTSurvey/researcher-analytics.html')
 
     return HttpResponse(template.render(request))
 
+# Subject View (Researcher)
 def researcher_subjects(request):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
+
     template = loader.get_template('QTSurvey/researcher-subjects.html')
 
     return HttpResponse(template.render(request))
 
+# Completed Surveys (Subject)
 def subject_completed_surveys(request):
+    if not (request.user.is_authenticated() and not request.session.get('researcher')):
+        return redirect('index')
+
     template = loader.get_template('QTSurvey/subject-completed-surveys.html')
 
     return HttpResponse(template.render(request))
 
+# Create Survey (Researcher)
 def create_survey(request):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
+
     template = loader.get_template('QTSurvey/create-survey.html')
 
     return HttpResponse(template.render(request))

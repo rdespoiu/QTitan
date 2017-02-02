@@ -30,6 +30,9 @@ ALLOWED_HOSTS = []
 # Redirection after successful login
 LOGIN_REDIRECT_URL = 'index'
 
+# End logged in session when browser is closed
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # Application definition
 
 INSTALLED_APPS = [
