@@ -7,6 +7,7 @@ from django.contrib.auth import (authenticate, get_user_model, login, logout,)
 from .forms import UserForm
 from django.shortcuts import redirect
 from .models import *
+from .Controllers.SubjectCompletedSurveys import getSubjectCompletedSurveys
 from .Controllers.SubjectAvailableSurveys import getSubjectAvailableSurveys
 from .Controllers.ResearcherSurveys import getResearcherSurveys
 
@@ -89,7 +90,7 @@ def subject_completed_surveys(request):
 
     template = loader.get_template('QTSurvey/subject-completed-surveys.html')
 
-    context = {'request': request}
+    context = {'request': request, 'subjectCompletedSurveys': getSubjectCompletedSurveys(request)}
 
     return HttpResponse(template.render(context, request))
 
