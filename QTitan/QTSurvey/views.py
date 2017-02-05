@@ -8,6 +8,7 @@ from .forms import UserForm
 from django.shortcuts import redirect
 from .models import *
 from .Controllers.SubjectCompletedSurveys import getSubjectCompletedSurveys
+from .Controllers.SubjectAvailableSurveys import getSubjectAvailableSurveys
 
 
 # Views
@@ -16,6 +17,9 @@ from .Controllers.SubjectCompletedSurveys import getSubjectCompletedSurveys
 # If there IS a session, redirect to 'surveys'
 def index(request):
     if request.user.is_authenticated():
+        if not request.session.get('researcher'):
+            request.session['researcher'] = True if len(request.user.groups.filter(name='researcher')) == 1 \
+                                                 else False
         return redirect('surveys')
     else:
         return redirect('login')
@@ -45,10 +49,13 @@ def surveys(request):
     if not request.user.is_authenticated():
         return redirect('index')
 
-    template = loader.get_template('QTSurvey/researcher-surveys.html')
-    template = loader.get_template('QTSurvey/subject-available-surveys.html')
-
     context = {'request': request}
+
+    if request.session.get('researcher'):
+        template = loader.get_template('QTSurvey/researcher-surveys.html')
+    else:
+        template = loader.get_template('QTSurvey/subject-available-surveys.html')
+        context['subjectAvailableSurveys'] = getSubjectAvailableSurveys(request)
 
     return HttpResponse(template.render(context, request))
 
@@ -61,7 +68,7 @@ def researcher_analytics(request):
 
     context = {'request': request}
 
-    return HttpResponse(template.render(conext, request))
+    return HttpResponse(template.render(context, request))
 
 # Subject View (Researcher)
 def researcher_subjects(request):
