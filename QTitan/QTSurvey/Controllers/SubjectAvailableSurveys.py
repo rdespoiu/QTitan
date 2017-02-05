@@ -1,9 +1,11 @@
-from .models import *
-from itertools import chain
+from ..models import *
 
 def getSubjectAvailableSurveys(request):
-    accessRestrictedSurveys = Survey.objects.filter(id__in = SurveyAccess.objects.filter(userID = request.user))
-    openSurveys = Survey.objects.filter(distribution = False)
-    completedSurveys = CompletedSurvey.objects.filter(userID = request.user)
+    query = '''SELECT * FROM QTSurvey_Survey
+               WHERE
+                 distribution = 0 or
+                 id in (SELECT SurveyID_ID FROM QTSurvey_SurveyAccess WHERE UserID_ID = {}) and
+                 id not in (SELECT distinct SurveyID_ID from QTSurvey_CompletedSurvey WHERE UserID_ID = {})
+                 '''.format(request.user.id, request.user.id)
 
-    return [survey for survey in chain(accessRestrictedSurveys, openSurveys) if survey not in completedSurveys]
+    return list(Survey.objects.raw(query))
