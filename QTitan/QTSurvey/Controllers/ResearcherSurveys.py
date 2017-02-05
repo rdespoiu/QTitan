@@ -14,29 +14,5 @@ def getResearcherSurveys(request):
 
                 GROUP BY QTSurvey_Survey.ID
             '''.format(request.user.id)
-            
+
     return list(Survey.objects.raw(query))
-
-
-'''
-
-select qtsurvey_survey.id, qtsurvey_survey.title, qtsurvey_survey.description, qtsurvey_survey.distribution, qtsurvey_survey.ownerid_id, count(distinct qtsurvey_completedsurvey.userid_id)
-from qtsurvey_survey inner join qtsurvey_completedsurvey
-on qtsurvey_survey.id = qtsurvey_completedsurvey.surveyid_id and qtsurvey_survey.ownerid_id = 5
-group by qtsurvey_survey
-
-select qtsurvey_survey.id, qtsurvey_survey.title, qtsurvey_survey.description, qtsurvey_survey.distribution, qtsurvey_survey.ownerid_id, count(distinct qtsurvey_completedsurvey.userid_id)
-from qtsurvey_survey left outer join qtsurvey_completedsurvey
-on qtsurvey_survey.id = qtsurvey_completedsurvey.surveyid_id and qtsurvey_survey.ownerid_id = 5
-group by qtsurvey_survey.id
-
-select 	qtsurvey_survey.id,
-			qtsurvey_survey.title,
-			qtsurvey_survey.description,
-			qtsurvey_survey.distribution,
-			qtsurvey_survey.ownerid_id,
-			count(distinct qtsurvey_completedsurvey.userid_id)
-from qtsurvey_survey left outer join qtsurvey_completedsurvey
-on qtsurvey_survey.id = qtsurvey_completedsurvey.surveyid_id and qtsurvey_survey.ownerid_id = 5
-group by qtsurvey_survey.id
-'''
