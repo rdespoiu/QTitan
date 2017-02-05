@@ -8,6 +8,7 @@ from .forms import UserForm
 from django.shortcuts import redirect
 from .models import *
 from .Controllers.SubjectAvailableSurveys import getSubjectAvailableSurveys
+from .Controllers.ResearcherSurveys import getResearcherSurveys
 
 
 # Views
@@ -52,6 +53,7 @@ def surveys(request):
 
     if request.session.get('researcher'):
         template = loader.get_template('QTSurvey/researcher-surveys.html')
+        context['researcherSurveys'] = getResearcherSurveys(request)
     else:
         template = loader.get_template('QTSurvey/subject-available-surveys.html')
         context['subjectAvailableSurveys'] = getSubjectAvailableSurveys(request)
