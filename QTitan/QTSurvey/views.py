@@ -7,9 +7,7 @@ from django.contrib.auth import (authenticate, get_user_model, login, logout,)
 from .forms import UserForm
 from django.shortcuts import redirect
 from .models import *
-from .Controllers.SubjectCompletedSurveys import getSubjectCompletedSurveys
-from .Controllers.SubjectAvailableSurveys import getSubjectAvailableSurveys
-from .Controllers.ResearcherSurveys import getResearcherSurveys
+from .Controllers import *
 
 
 # Views
