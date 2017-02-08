@@ -5,8 +5,7 @@
 {% block create_survey %}
 
 <div class="create-survey-box">
-  <form action="" method="POST">
-    {% csrf_token  %}
+  <form>
 
     <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="distribution-flag" value='DSFlag' name='distribution-flag'>Invitation only survey</label>
     <input type="text" class="form-control create-survey-form" id="survey-title" placeholder="survey title">
