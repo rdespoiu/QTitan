@@ -1,51 +1,59 @@
 {% if page == "researcher_surveys" %}
   {% for survey in researcherSurveys %}
-    <td class="custom-text">{{ survey.id}}</td>
-    <td class="custom-text">{{ survey.title }}</td>
-    <td class="custom-text">{{ survey.count }}</td>
-    <td class="custom-text">{{ survey.dsflag }}</td>
-    <td><button class="btn btn-primary btn-block custom-button">Edit</button></td>
-    <td><button class="btn btn-primary btn-block custom-button">Delete</button></td>
+    <tr>
+      <td class="custom-text">{{ survey.id }}</td>
+      <td class="custom-text">{{ survey.title }}</td>
+      <td class="custom-text">{{ survey.participants }}</td>
+      <td class="custom-text">{{ survey.distribution }}</td>
+      <td><button class="btn btn-primary btn-block custom-button">Edit</button></td>
+      <td><button class="btn btn-primary btn-block custom-button">Delete</button></td>
+    </tr>
   {% endfor %}
 
 {% elif page == "researcher_analytics" %}
   {% for survey in researcherSurveys %}
-    <td class="custom-text">{{ survey.id }}</td>
-    <td class="custom-text">{{ survey.title }}</td>
-    <td class="custom-text">{{ survey.count }}</td>
-    <td class="custom-text">{{ survey.dsflag }}</td>
-    <td><button class="btn btn-primary btn-block custom-button">View Results</button></td>
-    <td><button class="btn btn-primary btn-block custom-button">Run Analytics</button></td>
+    <tr>
+      <td class="custom-text">{{ survey.id }}</td>
+      <td class="custom-text">{{ survey.title }}</td>
+      <td class="custom-text">{{ survey.participants }}</td>
+      <td class="custom-text">{{ survey.distribution }}</td>
+      <td><button class="btn btn-primary btn-block custom-button">View Results</button></td>
+      <td><button class="btn btn-primary btn-block custom-button">Run Analytics</button></td>
+    </tr>
   {% endfor %}
 
 {% elif page == "researcher_subjects" %}
   {% for subject in subjects %}
-    <td class="custom-text">{{ subject.id }}</td>
-    <td class="custom-text">{{ subject.firstName|add:" "|add:subject.lastName }}</td>
-    <td class="custom-text">{{ subject.age }}</td>
-    <td class="custom-text">{{ subject.phone }}</td>
-    <td class="custom-text">{{ subject.email }}</td>
-    <td><button class="btn btn-primary btn-block custom-button">View Profile</button></td>
-    <td><button class="btn btn-primary btn-block custom-button">Contact</button></td>
-    <td><button class="btn btn-primary btn-block custom-button">Invite</button></td>
+    <tr>
+      <td class="custom-text">{{ subject.id }}</td>
+      <td class="custom-text">{{ subject.firstName|add:" "|add:subject.lastName }}</td>
+      <td class="custom-text">{{ subject.age }}</td>
+      <td class="custom-text">{{ subject.phone }}</td>
+      <td class="custom-text">{{ subject.email }}</td>
+      <td><button class="btn btn-primary btn-block custom-button">View Profile</button></td>
+      <td><button class="btn btn-primary btn-block custom-button">Contact</button></td>
+      <td><button class="btn btn-primary btn-block custom-button">Invite</button></td>
+    </tr>
   {% endfor %}
 
 {% elif page == "subject_available_surveys" %}
   {% for survey in subjectAvailableSurveys %}
-    <td class="custom-text">{{ survey.id }}</td>
-    <td class="custom-text">{{ survey.title }}</td>
-    <td class="custom-text">{{ survey.count }}</td>
-    <td class="custom-text">{{ survey.dsflag }}</td>
-    <td><button class="btn btn-primary btn-block custom-button">View Details</button></td>
-    <td><button class="btn btn-primary btn-block custom-button">Take Survey</button></td>
+    <tr>
+      <td class="custom-text">{{ survey.id }}</td>
+      <td class="custom-text">{{ survey.title }}</td>
+      <td class="custom-text">{{ survey.distribution }}</td>
+      <td><button class="btn btn-primary btn-block custom-button">View Details</button></td>
+      <td><button class="btn btn-primary btn-block custom-button">Take Survey</button></td>
+    </tr>
   {% endfor %}
 
 {% elif page == "subject_completed_surveys" %}
   {% for survey in subjectCompletedSurveys %}
-    <td class="custom-text">{{ survey.id }}</td>
-    <td class="custom-text">{{ survey.title }}</td>
-    <td class="custom-text">{{ survey.count }}</td>
-    <td class="custom-text">{{ survey.dsflag }}</td>
-    <td><button class="btn btn-primary btn-block custom-button">My Response</button></td>
+    <tr>
+      <td class="custom-text">{{ survey.id }}</td>
+      <td class="custom-text">{{ survey.title }}</td>
+      <td class="custom-text">{{ survey.distribution }}</td>
+      <td><button class="btn btn-primary btn-block custom-button">My Response</button></td>
+    </tr>
   {% endfor %}
 {% endif %}

@@ -4,13 +4,20 @@ from django.http import HttpResponse
 from django.template import loader
 from django.template.response import TemplateResponse
 from django.contrib.auth import (authenticate, get_user_model, login, logout,)
-from .forms import UserForm
 from django.shortcuts import redirect
+
+# Models
 from .models import *
+
+# Controllers
+from .Controllers import *
+
+# Forms
+from .forms import UserForm, BaseDemo
+
+# Utility
 import datetime
 from _datetime import datetime
-from .forms import BaseDemo
-from .models import BaseDemographic
 
 
 # Views
@@ -19,6 +26,9 @@ from .models import BaseDemographic
 # If there IS a session, redirect to 'surveys'
 def index(request):
     if request.user.is_authenticated():
+        if not request.session.get('researcher'):
+            request.session['researcher'] = True if len(request.user.groups.filter(name='researcher')) == 1 \
+                                                 else False
         return redirect('surveys')
     else:
         return redirect('login')
@@ -63,10 +73,14 @@ def surveys(request):
     if not request.user.is_authenticated():
         return redirect('index')
 
-    template = loader.get_template('QTSurvey/researcher-surveys.html')
-    template = loader.get_template('QTSurvey/subject-available-surveys.html')
-
     context = {'request': request}
+
+    if request.session.get('researcher'):
+        template = loader.get_template('QTSurvey/researcher-surveys.html')
+        context['researcherSurveys'] = getResearcherSurveys(request)
+    else:
+        template = loader.get_template('QTSurvey/subject-available-surveys.html')
+        context['subjectAvailableSurveys'] = getSubjectAvailableSurveys(request)
 
     return HttpResponse(template.render(context, request))
 
@@ -77,7 +91,7 @@ def researcher_analytics(request):
 
     template = loader.get_template('QTSurvey/researcher-analytics.html')
 
-    context = {'request': request}
+    context = {'request': request, 'researcherSurveys': getResearcherSurveys(request)}
 
     return HttpResponse(template.render(context, request))
 
@@ -99,7 +113,7 @@ def subject_completed_surveys(request):
 
     template = loader.get_template('QTSurvey/subject-completed-surveys.html')
 
-    context = {'request': request}
+    context = {'request': request, 'subjectCompletedSurveys': getSubjectCompletedSurveys(request)}
 
     return HttpResponse(template.render(context, request))
 
