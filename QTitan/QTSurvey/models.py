@@ -2,6 +2,9 @@
 import django
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+from pickle import TRUE
+from django.template.defaultfilters import default
 
 #############
 # DB Models #
@@ -9,11 +12,12 @@ from django.contrib.auth.models import User
 
 # Demographics common to all users (researchers/subjects)
 class BaseDemographic(models.Model):
-    userID = models.ForeignKey(User, on_delete = models.CASCADE)
-    firstName = models.CharField(max_length = 40)
-    lastName = models.CharField(max_length = 40)
-    phone = models.CharField(max_length = 11)
-    dob = models.DateField()
+    demoId = models.IntegerField(primary_key = True)
+    userID = models.ForeignKey(User, on_delete = models.CASCADE, default = 1)
+    first_name= models.CharField(max_length = 40, null = True)
+    last_name = models.CharField(max_length = 40, null = True)
+    phone = models.CharField(max_length = 11, null = TRUE)
+    dob = models.DateField( null= True)
 
 # Custom demographics that some researchers may require subjects to populate
 class CustomDemographic(models.Model):

@@ -4,10 +4,20 @@ from django.http import HttpResponse
 from django.template import loader
 from django.template.response import TemplateResponse
 from django.contrib.auth import (authenticate, get_user_model, login, logout,)
-from .forms import UserForm
 from django.shortcuts import redirect
+
+# Models
 from .models import *
+
+# Controllers
 from .Controllers import *
+
+# Forms
+from .forms import UserForm, BaseDemo
+
+# Utility
+import datetime
+from _datetime import datetime
 
 
 # Views
@@ -30,6 +40,7 @@ def register(request):
 
     form = UserForm(request.POST)
     template = loader.get_template('QTSurvey/register.html')
+    demo_obj = BaseDemo(request.POST)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -38,10 +49,24 @@ def register(request):
             password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
-            return redirect('login')
-
+            
+            userID = User.objects.get(username=username).pk
+            #print(userID)
+            print(BaseDemo.demoId)
+            if demo_obj.is_valid():
+                demo_obj.save()
+                BaseDemographic.objects.update(userID = userID)
+                return redirect('login')
+                
+            return redirect('QTSurvey/register.html')
+        return redirect('QTSurvey/register.html')
     context = {'request': request, 'form': form}
     return HttpResponse(template.render(context,request))
+
+'''def base_demographic(request):
+    demo_obj = BaseDemo(request.POST)
+    if demo_obj.is_valid():
+        demo_obj.save()'''
 
 # Surveys (Researcher/Subject)
 def surveys(request):
