@@ -5,29 +5,20 @@
 {% block create_survey %}
 
 <div class="create-survey-box">
-  <form action="" method="POST">
+  <form action="" method="POST" name="form-createsurvey">
     {% csrf_token  %}
+    <p id="form-errors"></p>
+    <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="distribution" value="distribution" name="distribution">Invitation only survey</label>
+    <input type="text" class="form-control create-survey-form" id="title" placeholder="survey title" name="title" autocomplete="off">
+    <input type="text" class="form-control create-survey-form" id="description" placeholder="survey description" name="description" autocomplete="off"></input>
 
-    <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="distribution-flag" value='DSFlag' name='distribution-flag'>Invitation only survey</label>
-    <input type="text" class="form-control create-survey-form" id="survey-title" placeholder="survey title">
-    <textarea type="text" class="form-control create-survey-form" id="survey-description" placeholder="survey description"></textarea>
+    {{ surveyFieldsForm }}
 
-    <div class="options-wrapper">
-      <input type="text" class="form-control survey-option" placeholder="survey option" autocomplete="off" id="field1" name="prof1" data-items="8"/>
-      <button id="b1" class="btn btn-primary add-more" type="button">+</button>
-    </div>
-
-    <!--
-    <input autocomplete="off" class="form-control create-survey-form input survey-option" id="field1" name="prof1" type="text" placeholder="survey option" data-items="8"/>
-    <button id="b1" class="btn btn-primary add-more" type="button">+</button>
-    -->
-
-    <button type="submit" class="btn btn-primary btn-block custom-button registration-form">save</button>
+    <button class="btn btn-primary btn-block custom-button registration-form" id="add-field">add new field</button>
+    <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="save-survey">save</button>
 
   </form>
 </div>
-
-
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

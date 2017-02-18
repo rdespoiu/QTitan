@@ -26,4 +26,22 @@ class BaseDemo(forms.ModelForm):
 class CreateSurveyForm(forms.ModelForm):
     class Meta:
         model = Survey
-        fields = ['distribution-flag','survey title','survey description']
+        fields = ['title', 'description', 'distribution']
+
+class CreateSurveyFieldForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(CreateSurveyFieldForm, self).__init__(*args, **kwargs)
+
+        for i in range(1, 31):
+            self.fields['field{}'.format(i)] = forms.CharField(
+                                                max_length = 256,
+                                                label = '',
+                                                help_text = '',
+                                                required = True if i <= 5 else False,
+                                                widget = forms.TextInput(
+                                                            attrs = {'type': 'text',
+                                                                     'class': 'form-control create-survey-form',
+                                                                     'placeholder': 'survey option',
+                                                                     'id': 'field{}'.format(i),
+                                                                     'name': 'field{}'.format(i),
+                                                                     'autocomplete': 'off'}))
