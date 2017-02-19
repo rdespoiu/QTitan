@@ -31,8 +31,8 @@ class CreateSurveyForm(forms.ModelForm):
 class CreateSurveyFieldForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(CreateSurveyFieldForm, self).__init__(*args, **kwargs)
-
-        for i in range(1, 31):
+        maxFields = 15
+        for i in range(1, maxFields + 1):
             self.fields['field{}'.format(i)] = forms.CharField(
                                                 max_length = 256,
                                                 label = '',

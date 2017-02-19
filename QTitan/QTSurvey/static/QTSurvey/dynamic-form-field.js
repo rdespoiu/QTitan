@@ -1,7 +1,10 @@
 // Survey Object and Handlers
 var CreateSurvey = class {
   // Constructor
-  constructor() { this.fieldsVisible = 1; this.run(); }
+  constructor() { this.fieldsVisible = 1; this.maxFields = 15; this.run(); }
+
+  // Return max fields
+  getMaxFields() { return this.maxFields; }
 
   // Return current fields visible
   getFieldsVisible() { return this.fieldsVisible; }
@@ -12,9 +15,11 @@ var CreateSurvey = class {
   // Decrement fields visible and return the new val
   decrementFieldsVisible() { return --this.fieldsVisible; }
 
-  // Hide fields 2-30 on init
+  // Hide fields 2-maxFields on init
   hideFieldsOnInit() {
-    for (var i = 2; i <= 30; i++) $('#field' + i).hide();
+    self = this;
+    const maxFields = self.getMaxFields();
+    for (var i = 2; i <= maxFields; i++) $('#field' + i).hide();
   }
 
   // Add new field handler
@@ -26,19 +31,23 @@ var CreateSurvey = class {
 
       var fieldsVisible = self.getFieldsVisible();
 
-      if ($('#field' + fieldsVisible).val() && fieldsVisible < 30) {
+      if ($('#field' + fieldsVisible).val() && fieldsVisible < self.getMaxFields()) {
         fieldsVisible = self.incrementFieldsVisible()
         $('#field' + fieldsVisible).show();
         $('#field' + fieldsVisible).val('');
       }
+
+      document.getElementById('field' + fieldsVisible).focus();
     });
+
+
   }
 
   // Delete field handler (when user deletes text)
   handleDeleteFieldText() {
     self = this;
-
-    for (var i = 1; i <= 30; i++) {
+    const maxFields = self.getMaxFields();
+    for (var i = 1; i <= maxFields; i++) {
       $('#field' + i).on('input keyup paste', function() {
         var fieldsVisible = self.getFieldsVisible();
         var hasValue = $.trim(this.value).length;
@@ -79,7 +88,7 @@ var CreateSurvey = class {
 
   // Run all handlers
   run() {
-    // Initially hide fields 2-30
+    // Initially hide fields 2-maxFields
     this.hideFieldsOnInit();
 
     // Install handler for add new field
