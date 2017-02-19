@@ -1,0 +1,32 @@
+<!-- Inheritance from base template -->
+{% extends "QTSurvey/base/base.html" %}
+{% load static %}
+
+{% block take_survey %}
+
+<div class="take-survey-box">
+  <center>
+    <h3>{{ survey.title }}</h3>
+    <h4>{{ survey.description }}</h4>
+  </center>
+
+  <form action="" method="POST" name="form-takesurvey">
+    {% csrf_token  %}
+    {{ takeSurveyForm }}
+
+    <ul id="sortableSurveyFields">
+      {% for field in surveyFields %}
+        <li>{{ field.value }}</li>
+      {% endfor %}
+    </ul>
+
+    <center><h5>Please drag and drop elements to arrange them in the order that best describes your subject expertise or preference.</h5></center>
+    <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="save-survey">submit</button>
+  </form>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="{% static 'QTSurvey/take-survey-sortable.js' %}"></script>
+
+{% endblock %}
