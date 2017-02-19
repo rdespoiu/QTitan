@@ -9,43 +9,39 @@ from django.contrib.auth import (
     logout,
     )
 from django.conf import settings
-from .models import BaseDemographic
+from .models import BaseDemographic, Survey, SurveyField
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget= forms.PasswordInput)
     class Meta:
         model = User
         fields = ['username','email','password','first_name','last_name']
-        
+
 class BaseDemo(forms.ModelForm):
-    #userID = models.many_to_many(User)
-    #user_id = int(request.POST['id'])
-    #userID = User.objects.get(id = user_id)
-    #userID = request.get_user_id()
-    demoId = 1
-    #userID = 1
     class Meta:
         model = BaseDemographic
-        #userID = forms.ModelChoiceField(queryset= BaseDemographic.objects.all())
         fields =  ['first_name','last_name','phone','dob']
-        
-    
-'''
-class UserLoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget= forms.PasswordInput)
-    
-    def clean(self, *args, **kwargs):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
-        user = authenticate(username = username, password = password)
-        if username and password:
-            user = authenticate(username= username, password= password)
-            if not user:
-                raise forms.ValidationError("This user does not exist")
-            if not user.check_password(password):
-                raise forms.ValidationError("Incorrect password")
-            if not user.is_active:
-                raise forms.ValidationError("This user is no longer active")
-        return super(UserLoginForm,self).clean(*args, **kwargs) 
-'''
+
+class CreateSurveyForm(forms.ModelForm):
+    class Meta:
+        model = Survey
+        fields = ['title', 'description', 'distribution']
+
+class CreateSurveyFieldForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(CreateSurveyFieldForm, self).__init__(*args, **kwargs)
+        maxFields = 15
+        for i in range(1, maxFields + 1):
+            self.fields['field{}'.format(i)] = forms.CharField(
+                                                max_length = 256,
+                                                label = '',
+                                                help_text = '',
+                                                required = True if i <= 5 else False,
+                                                widget = forms.TextInput(
+                                                            attrs = {'type': 'text',
+                                                                     'class': 'form-control create-survey-form',
+                                                                     'placeholder': 'survey option',
+                                                                     'id': 'field{}'.format(i),
+                                                                     'name': 'field{}'.format(i),
+                                                                     'autocomplete': 'off'}))

@@ -13,7 +13,7 @@ from .models import *
 from .Controllers import *
 
 # Forms
-from .forms import UserForm, BaseDemo
+from .forms import *
 
 # Utility
 import datetime
@@ -38,8 +38,9 @@ def register(request):
     if request.user.is_authenticated():
         return redirect('index')
 
-    form = UserForm(request.POST)
     template = loader.get_template('QTSurvey/register.html')
+
+    form = UserForm(request.POST)
     demo_obj = BaseDemo(request.POST)
 
     if request.method == 'POST':
@@ -49,24 +50,18 @@ def register(request):
             password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
-            
+
             userID = User.objects.get(username=username).pk
-            #print(userID)
-            print(BaseDemo.demoId)
+
             if demo_obj.is_valid():
                 demo_obj.save()
                 BaseDemographic.objects.update(userID = userID)
                 return redirect('login')
-                
+
             return redirect('QTSurvey/register.html')
         return redirect('QTSurvey/register.html')
     context = {'request': request, 'form': form}
     return HttpResponse(template.render(context,request))
-
-'''def base_demographic(request):
-    demo_obj = BaseDemo(request.POST)
-    if demo_obj.is_valid():
-        demo_obj.save()'''
 
 # Surveys (Researcher/Subject)
 def surveys(request):
@@ -124,6 +119,28 @@ def create_survey(request):
 
     template = loader.get_template('QTSurvey/create-survey.html')
 
-    context = {'request': request}
+    surveyForm = CreateSurveyForm(request.POST)
+    surveyFieldsForm = CreateSurveyFieldForm(request.POST)
 
+    if request.method == 'POST':
+        if surveyForm.is_valid() and surveyFieldsForm.is_valid():
+            # Create Survey
+            survey = Survey(ownerID = request.user,
+                            title = surveyForm.cleaned_data['title'],
+                            description = surveyForm.cleaned_data['description'],
+                            distribution = surveyForm.cleaned_data['distribution'])
+            survey.save()
+
+            # Create Survey Fields
+            data = surveyFieldsForm.cleaned_data
+
+            for i in range(1, 31):
+                if data.get('field{}'.format(i)):
+                    surveyField = SurveyField(surveyID = survey,
+                                              value = data.get('field{}'.format(i)))
+                    surveyField.save()
+
+            return redirect('index')
+
+    context = {'request': request, 'surveyForm': surveyForm, 'surveyFieldsForm': surveyFieldsForm}
     return HttpResponse(template.render(context, request))
