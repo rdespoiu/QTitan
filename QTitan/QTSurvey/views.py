@@ -144,3 +144,39 @@ def create_survey(request):
 
     context = {'request': request, 'surveyForm': surveyForm, 'surveyFieldsForm': surveyFieldsForm}
     return HttpResponse(template.render(context, request))
+
+def take_survey(request, survey_id):
+    if not (request.user.is_authenticated() and not request.session.get('researcher')):
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/take-survey.html')
+    survey = Survey.objects.get(id = survey_id)
+    surveyFields = SurveyField.objects.filter(surveyID = survey)
+
+    takeSurveyForm = TakeSurveyForm(surveyFields, request.POST)
+
+    if request.method == 'POST':
+        if takeSurveyForm.is_valid():
+            data = takeSurveyForm.cleaned_data
+            surveyFieldMap = {}
+
+            for field in takeSurveyForm.hidden_fields():
+                # Hacky splicing to get surveyFieldID
+                surveyFieldMap[field.value()] = int(str(field).split('surveyFieldID="', 1)[1].split('"', 1)[0])
+
+            for position in data:
+                completedSurveyField = CompletedSurvey(surveyID = survey,
+                                                       surveyFieldID = SurveyField.objects.get(id = surveyFieldMap[data[position]]),
+                                                       userID = request.user,
+                                                       orderPosition = int(position) + 1)
+                completedSurveyField.save()
+
+                return redirect('../../')
+
+        else:
+            raise RuntimeError('Invalid form, please try again')
+
+
+    context = {'request': request, 'takeSurveyForm': takeSurveyForm, 'survey': survey, 'surveyFields': surveyFields}
+
+    return HttpResponse(template.render(context, request))

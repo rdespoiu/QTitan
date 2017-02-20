@@ -59,12 +59,88 @@ html {
 }
 
 
+/* TAKE SURVEY FORM */
+.take-survey-box {
+  background: transparent;
+  position: absolute;
+  width: 50%;
+  height: 40%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.take-survey-box ul {
+  list-style-type: none;
+  list-style: none;
+  padding-left: 0;
+}
+
+.take-survey-box ul li {
+  background-color: #212121;
+  opacity: 0.8;
+  list-style: none;
+  font-size: 1.5em;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.take-survey-box ul li:focus {
+  opacity: 1.0;
+  outline: none;
+  box-shadow: none;
+}
+
+
+.take-survey-box form input {
+  background-color: #212121;
+  opacity: 0.8;
+}
+
+.take-survey-box form input:focus {
+  opacity: 1.0;
+  outline: none;
+  box-shadow: none;
+}
+
+.take-survey-box form input:disabled {
+  background-color: #212121;
+  opacity: 0.8;
+  cursor: default;
+}
+
+.take-survey-box form a {
+  opacity: 0.6;
+  color: white;
+  font-size: 1.5em;
+}
+
+.take-survey-box form a:hover {
+  opacity: 1.0;
+  text-decoration: none;
+}
+
+.take-survey-form {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  height: 14.25%;
+  font-size: 1.5em;
+  text-align: center;
+  border: transparent;
+}
 
 /* CREATE SURVEY FORM */
 
 .create-survey-box form {
   background: transparent;
-  position: absolute;;
+  position: absolute;
   width: 50%;
   height: 40%;
   top: 0;
@@ -80,17 +156,6 @@ html {
 }
 
 .create-survey-box form input:focus {
-  opacity: 1.0;
-  outline: none;
-  box-shadow: none;
-}
-
-.create-survey-box textarea {
-  background-color: #212121;
-  opacity: 0.8;
-}
-
-.create-survey-box textarea:focus {
   opacity: 1.0;
   outline: none;
   box-shadow: none;
