@@ -14,4 +14,4 @@ class TakeSurveyForm(forms.Form):
                                                             attrs = {'value': surveyFields[i].value,
                                                                      'type': 'text',
                                                                      'id': str(i),
-                                                                     'surveyFieldID': str(surveyFields[i].id)}))
+                                                                     'orderPosition': str(surveyFields[i].id)}))
