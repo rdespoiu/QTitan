@@ -189,3 +189,18 @@ def take_survey(request, survey_id):
     context = {'request': request, 'takeSurveyForm': takeSurveyForm, 'survey': survey, 'surveyFields': surveyFields}
 
     return HttpResponse(template.render(context, request))
+
+def view_survey_self_response(request, survey_id):
+    if not (request.user.is_authenticated() and not request.session.get('researcher')):
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/subject-view-survey-response.html')
+
+    survey = Survey.objects.get(id = survey_id)
+    completedSurvey = sorted(list(CompletedSurvey.objects.filter(surveyID = survey,
+                                                                 userID = request.user)),
+                             key = lambda x: x.orderPosition)
+
+    context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey}
+
+    return HttpResponse(template.render(context, request))
