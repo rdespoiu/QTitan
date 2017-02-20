@@ -12,7 +12,9 @@ def getResearcherSurveys(request):
 
                 ON       QTSurvey_Survey.ID = QTSurvey_CompletedSurvey.SurveyID_ID and QTSurvey_Survey.OwnerID_ID = {}
 
+                WHERE    QTSurvey_Survey.OwnerID_ID = {}
+
                 GROUP BY QTSurvey_Survey.ID
-            '''.format(request.user.id)
+            '''.format(request.user.id, request.user.id)
 
     return list(Survey.objects.raw(query))

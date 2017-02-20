@@ -3,6 +3,9 @@ from .ResearcherSurveys import getResearcherSurveys
 from .ResearcherSubjects import getResearcherSubjects
 from .SubjectAvailableSurveys import getSubjectAvailableSurveys
 from .SubjectCompletedSurveys import getSubjectCompletedSurveys
+from .SurveyResponse import getSurveyResponse
+from .GetSurvey import getSurvey
+from .SurveyTakers import getSurveyTakers
 
 # Forms
 from .UserForm import UserForm
