@@ -178,7 +178,7 @@ def take_survey(request, survey_id):
                                                        orderPosition = int(position) + 1)
                 completedSurveyField.save()
 
-                return redirect('../../')
+            return redirect('index')
 
         else:
             raise RuntimeError('Invalid form, please try again')
