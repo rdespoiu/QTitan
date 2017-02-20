@@ -1,5 +1,22 @@
 <div class="registration-box">
   <form method = "POST" action = "" name="form-register">
+    <!-- Error messages for invalid form submission -->
+    {% if userForm.errors or demographicsForm.errors %}
+      <ul id="form-errors">
+        {% for field in userForm %}
+          {% for error in field.errors %}
+            <li style="color: red;">{{ field.name }}: {{error|escape }}</li>
+          {% endfor %}
+        {% endfor %}
+
+        {% for field in demographicsForm %}
+          {% for error in field.errors %}
+            <li style="color: red;">{{ field.name }}: {{error|escape }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+
   	{% csrf_token %}
   	<input type="text" class="form-control login-form" id="user" placeholder="username" name="username">
     <input type="text" class="form-control registration-form" id="email-address" placeholder="email" name = "email">
