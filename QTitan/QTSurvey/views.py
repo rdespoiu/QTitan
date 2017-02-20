@@ -37,8 +37,8 @@ def register(request):
 
     template = loader.get_template('QTSurvey/register.html')
 
-    userForm = UserForm(request.POST)
-    demographicsForm = BaseDemographicForm(request.POST)
+    userForm = UserForm(request.POST or None)
+    demographicsForm = BaseDemographicForm(request.POST or None)
 
     if request.method == 'POST':
         if userForm.is_valid() and demographicsForm.is_valid():
@@ -66,8 +66,6 @@ def register(request):
 
             login(request, newUser)
             return redirect('index')
-
-        return redirect('QTSurvey/register.html')
 
     context = {'request': request, 'userForm': userForm, 'demographicsForm': demographicsForm}
     return HttpResponse(template.render(context,request))
