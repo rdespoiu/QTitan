@@ -12,9 +12,6 @@ from .models import *
 # Controllers
 from .Controllers import *
 
-# Forms
-from .forms import *
-
 # Utility
 import datetime
 from _datetime import datetime
@@ -41,7 +38,7 @@ def register(request):
     template = loader.get_template('QTSurvey/register.html')
 
     userForm = UserForm(request.POST)
-    demographicsForm = BaseDemo(request.POST)
+    demographicsForm = BaseDemographicForm(request.POST)
 
     if request.method == 'POST':
         if userForm.is_valid() and demographicsForm.is_valid():
