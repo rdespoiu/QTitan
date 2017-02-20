@@ -168,14 +168,16 @@ def take_survey(request, survey_id):
             surveyFieldMap = {}
 
             for field in takeSurveyForm.hidden_fields():
-                # Hacky splicing to get surveyFieldID
-                surveyFieldMap[field.value()] = int(str(field).split('surveyFieldID="', 1)[1].split('"', 1)[0])
+                # Hacky splicing to get orderPosition
+                surveyFieldMap[field.value()] = int(str(field).split('orderPosition="', 1)[1].split('"', 1)[0])
 
-            for position in data:
+
+            for field in surveyFieldMap:
                 completedSurveyField = CompletedSurvey(surveyID = survey,
-                                                       surveyFieldID = SurveyField.objects.get(id = surveyFieldMap[data[position]]),
+                                                       surveyFieldID = SurveyField.objects.get(value = field, surveyID = survey),
                                                        userID = request.user,
-                                                       orderPosition = int(position) + 1)
+                                                       orderPosition = surveyFieldMap[field])
+
                 completedSurveyField.save()
 
             return redirect('index')
