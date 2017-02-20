@@ -1,0 +1,21 @@
+<!-- Inheritance from base template -->
+{% extends "QTSurvey/base/base.html" %}
+{% load static %}
+
+{% block view_survey_self_response %}
+
+<div class="take-survey-box">
+  <center>
+    <h2>Response for: {{ survey.title }}</h2>
+  </center>
+
+  <ul id="sortableSurveyFields">
+    {% for field in completedSurvey %}
+      <li>{{ field.surveyFieldID.value }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+{% endblock %}
