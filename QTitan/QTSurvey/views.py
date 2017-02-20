@@ -97,7 +97,7 @@ def researcher_subjects(request):
 
     template = loader.get_template('QTSurvey/researcher-subjects.html')
 
-    context = {'request': request}
+    context = {'request': request, 'researcherSubjects': getResearcherSubjects(request)}
 
     return HttpResponse(template.render(context, request))
 

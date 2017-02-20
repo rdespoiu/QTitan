@@ -23,10 +23,10 @@
   {% endfor %}
 
 {% elif page == "researcher_subjects" %}
-  {% for subject in subjects %}
+  {% for subject in researcherSubjects %}
     <tr>
-      <td class="custom-text">{{ subject.id }}</td>
-      <td class="custom-text">{{ subject.firstName|add:" "|add:subject.lastName }}</td>
+      <td class="custom-text">{{ subject.userID.id }}</td>
+      <td class="custom-text">{{ subject.first_name|add:" "|add:subject.last_name }}</td>
       <td class="custom-text">{{ subject.age }}</td>
       <td class="custom-text">{{ subject.phone }}</td>
       <td class="custom-text">{{ subject.email }}</td>
