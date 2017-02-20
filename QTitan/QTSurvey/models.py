@@ -12,7 +12,6 @@ from django.template.defaultfilters import default
 
 # Demographics common to all users (researchers/subjects)
 class BaseDemographic(models.Model):
-    demoId = models.IntegerField(primary_key = True)
     userID = models.ForeignKey(User, on_delete = models.CASCADE, default = 1)
     first_name= models.CharField(max_length = 40, null = True)
     last_name = models.CharField(max_length = 40, null = True)

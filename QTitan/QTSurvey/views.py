@@ -40,27 +40,39 @@ def register(request):
 
     template = loader.get_template('QTSurvey/register.html')
 
-    form = UserForm(request.POST)
-    demo_obj = BaseDemo(request.POST)
+    userForm = UserForm(request.POST)
+    demographicsForm = BaseDemo(request.POST)
 
     if request.method == 'POST':
-        if form.is_valid():
-            user = form.save(commit=False)
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
+        if userForm.is_valid() and demographicsForm.is_valid():
+            userData = userForm.cleaned_data
+            demographicsData = demographicsForm.cleaned_data
 
-            userID = User.objects.get(username=username).pk
+            # Create User object
+            newUser = User(username = userData['username'],
+                           first_name = userData['first_name'],
+                           last_name = userData['last_name'],
+                           email = userData['email'])
 
-            if demo_obj.is_valid():
-                demo_obj.save()
-                BaseDemographic.objects.update(userID = userID)
-                return redirect('login')
+            newUser.set_password(userData['password'])
 
-            return redirect('QTSurvey/register.html')
+            newUser.save()
+
+            # Create BaseDemographic object
+            newUserDemographics = BaseDemographic(userID = newUser,
+                                                  first_name = demographicsData['first_name'],
+                                                  last_name = demographicsData['last_name'],
+                                                  phone = demographicsData['phone'],
+                                                  dob = demographicsData['dob'])
+
+            newUserDemographics.save()
+
+            login(request, newUser)
+            return redirect('index')
+
         return redirect('QTSurvey/register.html')
-    context = {'request': request, 'form': form}
+
+    context = {'request': request, 'userForm': userForm, 'demographicsForm': demographicsForm}
     return HttpResponse(template.render(context,request))
 
 # Surveys (Researcher/Subject)
