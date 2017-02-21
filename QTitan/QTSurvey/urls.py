@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^takesurvey/(?P<survey_id>\w{0,50})/$', views.take_survey, name='takesurvey'),
     url(r'^viewresponse/(?P<survey_id>\w{0,50})/$', views.view_survey_self_response, name='viewresponse'),
     url(r'^viewresults/(?P<survey_id>\w{0,50})/$', views.researcher_view_results, name='viewresults'),
+    url(r'^irbconsent/(?P<survey_id>\w{0,50})/$', views.irb_consent_form, name='irbconsent'),
 ]

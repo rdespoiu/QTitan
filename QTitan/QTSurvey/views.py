@@ -157,8 +157,16 @@ def take_survey(request, survey_id):
     if not (request.user.is_authenticated() and not request.session.get('researcher')):
         return redirect('index')
 
+
     template = loader.get_template('QTSurvey/take-survey.html')
     survey = Survey.objects.get(id = survey_id)
+
+    if survey.distribution and not hasAccess(request.user, survey):
+        return redirect('index')
+
+    if survey.consentneeded and not hasGivenIRBConsent(request.user, survey):
+        return redirect('/irbconsent/{}'.format(survey_id))
+
     surveyFields = SurveyField.objects.filter(surveyID = survey)
 
     takeSurveyForm = TakeSurveyForm(surveyFields, request.POST)
@@ -218,5 +226,29 @@ def researcher_view_results(request, survey_id):
         participantResults[participant] = (getSurveyResponse(participant, survey))
 
     context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+
+    return HttpResponse(template.render(context, request))
+
+
+def irb_consent_form(request, survey_id):
+    if not (request.user.is_authenticated() and not request.session.get('researcher')):
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/irb-consent.html')
+    survey = getSurvey(survey_id)
+
+    if not hasAccess(request.user, survey):
+        return redirect('index')
+
+    if hasGivenIRBConsent(request.user, survey):
+        return redirect('/takesurvey/{}'.format(survey_id))
+
+    if request.method == 'POST':
+        consent = IRBConsent(surveyID = survey, userID = request.user)
+        consent.save()
+
+        return redirect('/takesurvey/{}'.format(survey_id))
+
+    context = {'request': request, 'survey': survey}
 
     return HttpResponse(template.render(context, request))

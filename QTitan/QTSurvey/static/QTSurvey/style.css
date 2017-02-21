@@ -46,6 +46,13 @@ html {
   border-color: #343F46;
 }
 
+.custom-button-danger {
+  font-size: 1.5em;
+  opacity: 0.8;
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+
 .custom-text {
   font-size: 1.5em;
 }
