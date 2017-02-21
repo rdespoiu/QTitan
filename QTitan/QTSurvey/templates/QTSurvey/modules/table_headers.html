@@ -23,6 +23,12 @@
   <th class="custom-text">Email</th>
   <th class="custom-text"></th>
 
+{% elif page == "researcher_invite" %}
+  <th class="custom-text">Please select the surveys you would like to invite {{ userid.first_name|add:" "|add:userid.last_name }} to participate in</th>
+  <th class="custom-text">ID</th>
+  <th class="custom-text">Participants</th>
+  <th class="custom-text"></th>
+
 {% elif page == "subject_available_surveys" %}
   <th class="custom-text">ID</th>
   <th class="custom-text">Title</th>

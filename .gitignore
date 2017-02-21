@@ -10,6 +10,8 @@ __pycache__/
 # eclipse 
 .metadata
 RemoteSystemsTempFiles
+.project
+.pydevproject
 
 # Distribution / packaging
 .Python
