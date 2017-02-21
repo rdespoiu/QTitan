@@ -46,6 +46,13 @@ html {
   border-color: #343F46;
 }
 
+.custom-button-danger {
+  font-size: 1.5em;
+  opacity: 0.8;
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+
 .custom-text {
   font-size: 1.5em;
 }
@@ -301,16 +308,4 @@ html {
   font-size: 1.5em;
   text-align: center;
   border: transparent;
-}
-
-.control-group {
-	display: inline-block;
-	width: 200px;
-	height: 210px;
-	margin: 10px;
-	padding: 30px;
-	text-align: left;
-	vertical-align: top;
-	background: #fff;
-	box-shadow: 0 1px 2px rgba(0,0,0,.1);
 }

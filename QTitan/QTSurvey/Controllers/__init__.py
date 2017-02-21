@@ -7,6 +7,8 @@ from .ResearcherInvite import getResearcherInvite
 from .SurveyResponse import getSurveyResponse
 from .GetSurvey import getSurvey
 from .SurveyTakers import getSurveyTakers
+from .GetIRBConsent import hasGivenIRBConsent
+from .SurveyAccessControl import hasAccess
 
 # Forms
 from .UserForm import UserForm

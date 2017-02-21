@@ -1,0 +1,89 @@
+<!-- Inheritance from base template -->
+{% extends "QTSurvey/base/base.html" %}
+{% load static %}
+
+{% block irb_consent_form %}
+
+<form action="" method="POST" name="form-takesurvey">
+  {% csrf_token  %}
+
+
+  <center>
+    <!-- IRB Label -->
+    <h2>Please read and digitally sign the following Institutional Review Board consent form</h2>
+    <br>
+    <u><h3>{{ survey.title }} Consent Form</h3></u>
+
+    <!-- Introduction -->
+    <br>
+    <h4>You are being asked to take part in this research because you requested to participate via the QTitan survey portal. Please read this form carefully and ask any questions you may have before agreeing to take part in the study.</h4>
+
+    <!-- Description -->
+    <br>
+    <u><h4>What the study is about:</h4></u>
+    <h5>{{ survey.description }}</h5>
+
+    <!-- Instructions -->
+    <br>
+    <u><h4>What we will ask you to do:</h4></u>
+    <h5>
+      If you agree to be in this study, we will present you with various options that you will sort with regards to level of proficiency, interest, or other factors listed in the survey description.
+      The survey should not take more than ten minutes to complete.
+    </h5>
+
+    <!-- Risks/Benefits -->
+    <br>
+    <u><h4>Risks and benefits:</h4></u>
+    <h5>I do not anticipate any risks/benefits to you participating in this study other than those encountered in day-to-day life.</h5>
+
+    <!-- Compensation -->
+    <br>
+    <u><h4>Compensation:</h4></u>
+    <h5>There is no compensation associated with participating in this research</h5>
+
+    <!-- Confidentiality -->
+    <br>
+    <u><h4>Confidentiality:</h4></u>
+    <h5>
+      Your answers will be confidential. The records of this study will be kept private. In any sort of report we make public we will not include any information that will make it possible to identify you.
+      Research records will be kept in a secure database; only the researchers administering the survey will have access to the records.
+    </h5>
+
+    <!-- Voluntary -->
+    <br>
+    <u><h4>This study is voluntary:</h4></u>
+    <h5>Taking part in this study is completely voluntary. If you decide to take part, you are free to withdraw at any time.</h5>
+
+    <!-- Questions -->
+    <br>
+    <u><h4>If you have questions:</h4></u>
+    <h5>For any questions, please contact us at research@qtitan.org</h5>
+
+    <!-- Access -->
+    <br>
+    <h4>You will have access to your survey results until they are deleted.</h4>
+
+    <!-- Digitally sign -->
+    <br><br>
+    <h4>By selecting the below option, you consent to take part in this study.</h4>
+  </center>
+
+
+  <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="save-irbconsent">
+    I, {{ request.user.first_name|add:" "|add:request.user.last_name }}, have read the above information, and have received answers to any questions I asked. I consent to take part in the study.
+  </button>
+  <button class="btn btn-primary btn-block custom-button-danger registration-form" id="no-consent">
+    I do not consent to take part in this study.
+  </button>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script>
+  $('#no-consent').click(function(e) {
+    e.preventDefault();
+    location.href = '/';
+  });
+</script>
+
+{% endblock %}
