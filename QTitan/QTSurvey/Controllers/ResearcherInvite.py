@@ -2,7 +2,7 @@ from ..models import *
 
 def getResearcherInvite(request):
     query = '''
-                SELECT   QTSurvey_Survey.ID,
+              SELECT   QTSurvey_Survey.ID,
                          QTSurvey_Survey.description,
                          QTSurvey_Survey.distribution,
                          QTSurvey_Survey.OwnerID_ID as owner_id,
@@ -10,7 +10,7 @@ def getResearcherInvite(request):
 
                 FROM     QTSurvey_Survey LEFT OUTER JOIN QTSurvey_CompletedSurvey
 
-                ON       QTSurvey_Survey.ID = QTSurvey_CompletedSurvey.SurveyID_ID and QTSurvey_Survey.OwnerID_ID = {}
+                WHERE       QTSurvey_Survey.distribution = 1
 
                 GROUP BY QTSurvey_Survey.ID
             '''.format(request.user.id)
