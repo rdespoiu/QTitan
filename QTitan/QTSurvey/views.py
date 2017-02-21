@@ -193,7 +193,7 @@ def take_survey(request, survey_id):
 class SurveyDelete(DeleteView):
     model = Survey
     success_url = reverse_lazy('surveys')
-
-
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 
