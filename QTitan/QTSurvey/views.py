@@ -17,6 +17,7 @@ import datetime
 from _datetime import datetime
 
 
+
 # Views
 
 # Index only redirects. If there is no user session, redirect to login page.
@@ -204,3 +205,27 @@ def view_survey_self_response(request, survey_id):
     context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey}
 
     return HttpResponse(template.render(context, request))
+
+def researcher_invite (request, subject_id):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
+    
+    template = loader.get_template('QTSurvey/researcher-invite.html')
+    user = User.objects.get(id = subject_id)
+    if request.method == 'POST':
+        some_var = request.POST.getlist('checks')
+        #print(some_var)
+        for name in some_var:
+            subjectInvite = SurveyAccess(surveyID = Survey.objects.get(id = name),
+                                         userID = User.objects.get(id = user.id ))
+            subjectInvite.save()
+        return redirect('index')
+            #print (name)
+    context = {'request': request, 'userid':user, 'researcherInvite': getResearcherInvite(request)}
+    return HttpResponse(template.render(context, request))
+
+
+
+
+
+
