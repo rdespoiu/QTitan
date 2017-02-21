@@ -192,7 +192,7 @@ def take_survey(request, survey_id):
 
     return HttpResponse(template.render(context, request))
 
-<<<<<<< HEAD
+
 class SurveyDelete(DeleteView):
     model = Survey
     success_url = reverse_lazy('surveys')
@@ -201,7 +201,7 @@ class SurveyDelete(DeleteView):
 
 
 
-=======
+
 def view_survey_self_response(request, survey_id):
     if not (request.user.is_authenticated() and not request.session.get('researcher')):
         return redirect('index')
@@ -231,4 +231,3 @@ def researcher_view_results(request, survey_id):
     context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
     return HttpResponse(template.render(context, request))
->>>>>>> origin/master
