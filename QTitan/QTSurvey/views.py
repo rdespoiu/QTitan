@@ -19,6 +19,7 @@ import datetime
 from _datetime import datetime
 
 
+
 # Views
 
 # Index only redirects. If there is no user session, redirect to login page.
@@ -213,6 +214,35 @@ def view_survey_self_response(request, survey_id):
 
     context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey}
 
+    return HttpResponse(template.render(context, request))
+
+def researcher_invite (request, subject_id):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/researcher-invite.html')
+
+    user = User.objects.get(id = subject_id)
+
+    researcherInvites = []
+
+    # HACKY FIX FOR REMOVING SURVEYS THAT A SUBJECT ALREADY HAS ACCESS TO. FIX LATER
+    for survey in getResearcherInvite(request.user):
+        try:
+            SurveyAccess.objects.get(surveyID = Survey.objects.get(id = survey.id), userID = user)
+        except:
+            researcherInvites.append(survey)
+
+    if request.method == 'POST':
+        some_var = request.POST.getlist('checks')
+
+        for name in some_var:
+            subjectInvite = SurveyAccess(surveyID = Survey.objects.get(id = name),
+                                         userID = User.objects.get(id = user.id ))
+            subjectInvite.save()
+        return redirect('index')
+
+    context = {'request': request, 'userid':user, 'researcherInvite': researcherInvites}
     return HttpResponse(template.render(context, request))
 
 def researcher_view_results(request, survey_id):
