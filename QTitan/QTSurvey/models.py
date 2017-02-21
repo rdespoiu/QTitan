@@ -32,6 +32,7 @@ class Survey(models.Model):
     title = models.CharField(max_length = 256)
     description = models.CharField(max_length = 512)
     distribution = models.BooleanField(default = False)
+    consentneeded = models.BooleanField(default = False)
 
 # Survey option
 class SurveyField(models.Model):
@@ -47,5 +48,10 @@ class CompletedSurvey(models.Model):
 
 # For survey distribution, to check whether a subject has access to a survey.
 class SurveyAccess(models.Model):
+    surveyID = models.ForeignKey(Survey, on_delete = models.CASCADE)
+    userID = models.ForeignKey(User, on_delete = models.CASCADE)
+
+# IRB Consent
+class IRBConsent(models.Model):
     surveyID = models.ForeignKey(Survey, on_delete = models.CASCADE)
     userID = models.ForeignKey(User, on_delete = models.CASCADE)
