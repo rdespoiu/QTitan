@@ -170,17 +170,19 @@ def take_survey(request, survey_id):
             surveyFieldMap = {}
 
             for field in takeSurveyForm.hidden_fields():
-                # Hacky splicing to get surveyFieldID
-                surveyFieldMap[field.value()] = int(str(field).split('surveyFieldID="', 1)[1].split('"', 1)[0])
+                # Hacky splicing to get orderPosition
+                surveyFieldMap[field.value()] = int(str(field).split('orderPosition="', 1)[1].split('"', 1)[0])
 
-            for position in data:
+
+            for field in surveyFieldMap:
                 completedSurveyField = CompletedSurvey(surveyID = survey,
-                                                       surveyFieldID = SurveyField.objects.get(id = surveyFieldMap[data[position]]),
+                                                       surveyFieldID = SurveyField.objects.get(value = field, surveyID = survey),
                                                        userID = request.user,
-                                                       orderPosition = int(position) + 1)
+                                                       orderPosition = surveyFieldMap[field])
+
                 completedSurveyField.save()
 
-                return redirect('../../')
+            return redirect('index')
 
         else:
             raise RuntimeError('Invalid form, please try again')
@@ -190,6 +192,7 @@ def take_survey(request, survey_id):
 
     return HttpResponse(template.render(context, request))
 
+<<<<<<< HEAD
 class SurveyDelete(DeleteView):
     model = Survey
     success_url = reverse_lazy('surveys')
@@ -198,3 +201,34 @@ class SurveyDelete(DeleteView):
 
 
 
+=======
+def view_survey_self_response(request, survey_id):
+    if not (request.user.is_authenticated() and not request.session.get('researcher')):
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/subject-view-survey-response.html')
+
+    survey = getSurvey(survey_id)
+    completedSurvey = getSurveyResponse(request.user, survey)
+
+    context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey}
+
+    return HttpResponse(template.render(context, request))
+
+def researcher_view_results(request, survey_id):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
+
+    template = loader.get_template('QTSurvey/researcher_view_results.html')
+
+    survey = getSurvey(survey_id)
+    surveyParticipants = getSurveyTakers(survey)
+    participantResults = {}
+
+    for participant in surveyParticipants:
+        participantResults[participant] = (getSurveyResponse(participant, survey))
+
+    context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+
+    return HttpResponse(template.render(context, request))
+>>>>>>> origin/master

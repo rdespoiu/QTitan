@@ -11,7 +11,7 @@
   -->
   {% block user_Main %}
     {% if request.user.is_authenticated %}
-      {% include "QTSurvey/modules/user-dropdown.html" with user_firstName=request.user.first_name user_profile_url="http://www.google.com" logout_url="../logout" %}
+      {% include "QTSurvey/modules/user-dropdown.html" with user_firstName=request.user.first_name logout_url="/logout" %}
     {% endif %}
   {% endblock %}
 </div>
