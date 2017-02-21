@@ -1,4 +1,6 @@
 # Django Imports
+from django.views.generic.edit import DeleteView
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -189,6 +191,16 @@ def take_survey(request, survey_id):
     context = {'request': request, 'takeSurveyForm': takeSurveyForm, 'survey': survey, 'surveyFields': surveyFields}
 
     return HttpResponse(template.render(context, request))
+
+
+class SurveyDelete(DeleteView):
+    model = Survey
+    success_url = reverse_lazy('surveys')
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+
 
 def view_survey_self_response(request, survey_id):
     if not (request.user.is_authenticated() and not request.session.get('researcher')):
