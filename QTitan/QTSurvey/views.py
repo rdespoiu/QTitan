@@ -197,10 +197,8 @@ def view_survey_self_response(request, survey_id):
 
     template = loader.get_template('QTSurvey/subject-view-survey-response.html')
 
-    survey = Survey.objects.get(id = survey_id)
-    completedSurvey = sorted(list(CompletedSurvey.objects.filter(surveyID = survey,
-                                                                 userID = request.user)),
-                             key = lambda x: x.orderPosition)
+    survey = getSurvey(survey_id)
+    completedSurvey = getSurveyResponse(request.user, survey)
 
     context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey}
 
@@ -214,18 +212,29 @@ def researcher_invite (request, subject_id):
     user = User.objects.get(id = subject_id)
     if request.method == 'POST':
         some_var = request.POST.getlist('checks')
-        #print(some_var)
+
         for name in some_var:
             subjectInvite = SurveyAccess(surveyID = Survey.objects.get(id = name),
                                          userID = User.objects.get(id = user.id ))
             subjectInvite.save()
         return redirect('index')
-            #print (name)
+
     context = {'request': request, 'userid':user, 'researcherInvite': getResearcherInvite(request)}
     return HttpResponse(template.render(context, request))
 
+def researcher_view_results(request, survey_id):
+    if not (request.user.is_authenticated() and request.session.get('researcher')):
+        return redirect('index')
 
+    template = loader.get_template('QTSurvey/researcher_view_results.html')
 
+    survey = getSurvey(survey_id)
+    surveyParticipants = getSurveyTakers(survey)
+    participantResults = {}
 
+    for participant in surveyParticipants:
+        participantResults[participant] = (getSurveyResponse(participant, survey))
 
+    context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
+    return HttpResponse(template.render(context, request))
