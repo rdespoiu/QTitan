@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^completed/', views.subject_completed_surveys, name = 'completed'),
     url(r'^create/', views.create_survey, name = 'create'),
     url(r'^takesurvey/(?P<survey_id>\w{0,50})/$', views.take_survey, name='takesurvey'),
+    url(r'^delete/(?P<pk>\d+)/$', views.SurveyDelete.as_view(), name='delete_survey'),
 ]
