@@ -5,7 +5,6 @@
       <td class="custom-text">{{ survey.title }}</td>
       <td class="custom-text">{{ survey.participants }}</td>
       <td class="custom-text">{{ survey.distribution }}</td>
-      <td><button class="btn btn-primary btn-block custom-button">Edit</button></td>
       <td><button class="btn btn-primary btn-block custom-button">Delete</button></td>
     </tr>
   {% endfor %}
@@ -30,8 +29,6 @@
       <td class="custom-text">{{ subject.age }}</td>
       <td class="custom-text">{{ subject.phone }}</td>
       <td class="custom-text">{{ subject.email }}</td>
-      <td><button class="btn btn-primary btn-block custom-button">View Profile</button></td>
-      <td><button class="btn btn-primary btn-block custom-button">Contact</button></td>
       <td><button class="btn btn-primary btn-block custom-button" onclick = "location.href = '/invite/{{subject.userID.id}}';">Invite</button></td>
     </tr>
   {% endfor %}
@@ -67,7 +64,6 @@
       <td class="custom-text">{{ survey.id }}</td>
       <td class="custom-text">{{ survey.title }}</td>
       <td class="custom-text">{{ survey.distribution }}</td>
-      <td><button class="btn btn-primary btn-block custom-button">View Details</button></td>
       <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/takesurvey/{{ survey.id }}';">Take Survey</button></td>
     </tr>
   {% endfor %}
