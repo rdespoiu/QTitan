@@ -135,13 +135,14 @@ def create_survey(request):
             survey = Survey(ownerID = request.user,
                             title = surveyForm.cleaned_data['title'],
                             description = surveyForm.cleaned_data['description'],
-                            distribution = surveyForm.cleaned_data['distribution'])
+                            distribution = surveyForm.cleaned_data['distribution'],
+                            consentneeded = surveyForm.cleaned_data['consentneeded'])
             survey.save()
 
             # Create Survey Fields
             data = surveyFieldsForm.cleaned_data
 
-            for i in range(1, 31):
+            for i in range(1, 16):
                 if data.get('field{}'.format(i)):
                     surveyField = SurveyField(surveyID = survey,
                                               value = data.get('field{}'.format(i)))

@@ -13,3 +13,4 @@ from .BaseDemographicForm import BaseDemographicForm
 from .CreateSurveyForm import CreateSurveyForm
 from .CreateSurveyFieldForm import CreateSurveyFieldForm
 from .TakeSurveyForm import TakeSurveyForm
+from .IRBConsentForm import IRBConsentForm

@@ -4,4 +4,4 @@ from ..models import Survey
 class CreateSurveyForm(forms.ModelForm):
     class Meta:
         model = Survey
-        fields = ['title', 'description', 'distribution']
+        fields = ['title', 'description', 'distribution', 'consentneeded']
