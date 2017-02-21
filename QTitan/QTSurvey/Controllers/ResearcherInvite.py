@@ -11,6 +11,7 @@ def getResearcherInvite(request):
                 FROM     QTSurvey_Survey LEFT OUTER JOIN QTSurvey_CompletedSurvey
 
                 WHERE       QTSurvey_Survey.distribution = 1
+                AND         QTSurvey_Survey.OwnerID_ID = {}
 
                 GROUP BY QTSurvey_Survey.ID
             '''.format(request.user.id)
