@@ -11,11 +11,14 @@
     <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="consentneeded" value="consentneeded" name="consentneeded">IRB consent form required</label><br>
     <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="distribution" value="distribution" name="distribution">Invitation only survey</label>
     <input type="text" class="form-control create-survey-form" id="title" placeholder="survey title" name="title" autocomplete="off">
-    <input type="text" class="form-control create-survey-form" id="description" placeholder="survey description" name="description" autocomplete="off"></input>
+    <input type="text" class="form-control create-survey-form" id="description" placeholder="survey description" name="description" autocomplete="off"></input><br>
 
     {{ surveyFieldsForm }}
+    <button class="btn btn-primary btn-block custom-button registration-form" id="add-field">add new field</button><br>
 
-    <button class="btn btn-primary btn-block custom-button registration-form" id="add-field">add new field</button>
+
+    {{ customDemographicsForm }}
+    <button class="btn btn-primary btn-block custom-button registration-form" id="add-demographicfield">add new field</button><br>
     <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="save-survey">save</button>
 
   </form>

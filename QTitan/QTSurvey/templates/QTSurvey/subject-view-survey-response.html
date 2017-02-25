@@ -13,6 +13,11 @@
     {% for field in completedSurvey %}
       <li>{{ field.surveyFieldID.value }}</li>
     {% endfor %}
+    <br><br>
+    <center><u><h4>Demographics</h4></u></center>
+    {% for field in completedSurveyDemographics %}
+      <li>{{ field.value }}: {{ field.response }}</l1>
+    {% endfor %}
   </ul>
 </div>
 
