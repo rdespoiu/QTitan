@@ -12,6 +12,10 @@ from .GetIRBConsent import hasGivenIRBConsent
 from .SurveyAccessControl import hasAccess
 from .GetCustomDemographicFields import getCustomDemographicFields
 from .GetCustomDemographicResponse import getCustomDemographicResponse
+from .GetAuthStatus import isAuthenticated, isResearcher
+from .SetAuthStatus import setResearcher
+from .SetTemplate import setTemplate
+from .RenderPage import renderPage
 
 # Forms
 from .UserForm import UserForm
