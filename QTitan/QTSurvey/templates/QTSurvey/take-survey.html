@@ -12,6 +12,7 @@
 
   <form action="" method="POST" name="form-takesurvey">
     {% csrf_token  %}
+
     {{ takeSurveyForm }}
 
     <ul id="sortableSurveyFields">
@@ -19,8 +20,13 @@
         <li>{{ field.value }}</li>
       {% endfor %}
     </ul>
-
     <center><h5>Please drag and drop elements to arrange them in the order that best describes your subject expertise or preference.</h5></center>
+
+    <br><br>
+
+    {{ takeCustomDemographicForm }}
+    <center><h5>Please answer these demographic questions</h5></center>
+
     <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="save-survey">submit</button>
   </form>
 

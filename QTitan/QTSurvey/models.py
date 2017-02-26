@@ -19,12 +19,6 @@ class BaseDemographic(models.Model):
     phone = models.CharField(max_length = 11, null = TRUE)
     dob = models.DateField( null= True)
 
-# Custom demographics that some researchers may require subjects to populate
-class CustomDemographic(models.Model):
-    userID = models.ForeignKey(User, on_delete = models.CASCADE)
-    field = models.CharField(max_length = 40)
-    value = models.CharField(max_length = 40)
-
 # Survey
 # Distribution indicates whether a survey is open to all or by invite only. Default False = invite only
 class Survey(models.Model):
@@ -45,6 +39,17 @@ class CompletedSurvey(models.Model):
     surveyFieldID = models.ForeignKey(SurveyField, on_delete = models.CASCADE)
     userID = models.ForeignKey(User, on_delete = models.CASCADE)
     orderPosition = models.IntegerField()
+
+# Custom demographic field
+class CustomDemographicField(models.Model):
+    surveyID = models.ForeignKey(Survey, on_delete = models.CASCADE)
+    value = models.CharField(max_length = 256)
+
+# Custom demographic object
+class CustomDemographic(models.Model):
+    userID = models.ForeignKey(User, on_delete = models.CASCADE)
+    demographicField = models.ForeignKey(CustomDemographicField, on_delete = models.CASCADE)
+    response = models.CharField(max_length = 256)
 
 # For survey distribution, to check whether a subject has access to a survey.
 class SurveyAccess(models.Model):

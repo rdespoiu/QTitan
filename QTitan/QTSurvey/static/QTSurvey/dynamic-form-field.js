@@ -1,107 +1,118 @@
 // Survey Object and Handlers
-var CreateSurvey = class {
+const CreateSurvey = (fieldID) => {
   // Constructor
-  constructor() { this.fieldsVisible = 1; this.maxFields = 15; this.run(); }
+  //constructor(fieldID) { eval(`this.${fieldID}Visible = 1`); this.maxFields = 15; this.fieldID = fieldID; this.run(); }
+  let _fieldID = fieldID;
+  let _maxFields = 15;
+  let _fieldsVisible = 1;
 
   // Return max fields
-  getMaxFields() { return this.maxFields; }
+  const getMaxFields = () => { return _maxFields; };
+
+  // Return fieldID
+  const getFieldID = () => { return _fieldID; };
 
   // Return current fields visible
-  getFieldsVisible() { return this.fieldsVisible; }
+  const getFieldsVisible = () => { return _fieldsVisible; };
 
   // Increment fields visible and return the new val
-  incrementFieldsVisible() { return ++this.fieldsVisible; }
+  const incrementFieldsVisible = () => { return ++_fieldsVisible; };
 
   // Decrement fields visible and return the new val
-  decrementFieldsVisible() { return --this.fieldsVisible; }
+  const decrementFieldsVisible = () => { return --_fieldsVisible; };
 
   // Hide fields 2-maxFields on init
-  hideFieldsOnInit() {
-    self = this;
-    const maxFields = self.getMaxFields();
-    for (var i = 2; i <= maxFields; i++) $('#field' + i).hide();
+  const hideFieldsOnInit = () => {
+    const fieldID = getFieldID();
+    const maxFields = getMaxFields();
+
+    for (let i = 2; i <= maxFields; i++) $(`#${fieldID}${i}`).hide();
   }
 
   // Add new field handler
-  handleAddNewField() {
-    self = this;
+  const handleAddNewField = () => {
+    const fieldID = getFieldID();
+    const maxFields = getMaxFields();
 
-    $('#add-field').click(function(e) {
+    $(`#add-${fieldID}`).click(function(e) {
       e.preventDefault();
 
-      var fieldsVisible = self.getFieldsVisible();
+      let fieldsVisible = getFieldsVisible();
+      console.log(`${fieldID} clicked\n${fieldsVisible} fields visible`);
 
-      if ($('#field' + fieldsVisible).val() && fieldsVisible < self.getMaxFields()) {
-        fieldsVisible = self.incrementFieldsVisible()
-        $('#field' + fieldsVisible).show();
-        $('#field' + fieldsVisible).val('');
+      if ($(`#${fieldID}${fieldsVisible}`).val() && fieldsVisible < maxFields) {
+        fieldsVisible = incrementFieldsVisible();
+        $(`#${fieldID}${fieldsVisible}`).show();
+        $(`#${fieldID}${fieldsVisible}`).val('');
       }
 
-      document.getElementById('field' + fieldsVisible).focus();
+      document.getElementById(`${fieldID}${fieldsVisible}`).focus();
     });
-
-
   }
 
   // Delete field handler (when user deletes text)
-  handleDeleteFieldText() {
-    self = this;
-    const maxFields = self.getMaxFields();
-    for (var i = 1; i <= maxFields; i++) {
-      $('#field' + i).on('input keyup paste', function() {
-        var fieldsVisible = self.getFieldsVisible();
-        var hasValue = $.trim(this.value).length;
-        if (!hasValue) self.rearrangeInputs(this.id);
+  const handleDeleteFieldText = () => {
+    const fieldID = getFieldID();
+    const maxFields = getMaxFields();
+
+    for (let i = 1; i <= maxFields; i++) {
+      $(`#${fieldID}${i}`).on('input keyup paste', function() {
+        let fieldsVisible = getFieldsVisible();
+        let hasValue = $.trim(this.value).length;
+        if (!hasValue) rearrangeInputs(this.id);
       });
     }
   }
 
   // Rearrange input values on delete
-  rearrangeInputs(deletedField) {
-    self = this;
-    var fieldsVisible = self.getFieldsVisible();
+  const rearrangeInputs = (deletedField) => {
+    const fieldID = getFieldID();
+    let fieldsVisible = getFieldsVisible();
 
-    var n = deletedField.length;
+    let n = deletedField.length;
 
-    var deletedFieldNumber = parseInt(deletedField.slice(n - 2, n)) || parseInt(deletedField.slice(n - 1, n));
+    let deletedFieldNumber = parseInt(deletedField.slice(n - 2, n)) || parseInt(deletedField.slice(n - 1, n));
 
     // Deleted last field or first field
     if (deletedFieldNumber == fieldsVisible) {
       // Set field val to an empty string
-      $('#' + deletedField).val('');
+      $(`#${deletedField}`).val('');
 
       // If the deleted field number is > 1, hide the field and decrement fieldsVisible
       if (deletedFieldNumber > 1) {
-        $('#' + deletedField).hide();
-        fieldsVisible = self.decrementFieldsVisible();
+        $(`#${deletedField}`).hide();
+        fieldsVisible = decrementFieldsVisible();
       }
 
     } else {
       for (var i = deletedFieldNumber; i < fieldsVisible; i++) {
-        $('#field' + i).val($('#field' + (i + 1)).val());
-        if (i + 1 == fieldsVisible) $('#field' + fieldsVisible).hide();
+        $(`#${fieldID}${i}`).val($(`#${fieldID}${i + 1}`).val());
+        if (i + 1 == fieldsVisible) $(`#${fieldID}${fieldsVisible}`).hide();
       }
 
-      fieldsVisible = self.decrementFieldsVisible();
+      fieldsVisible = decrementFieldsVisible();
     }
   }
 
   // Run all handlers
-  run() {
+  const run = () => {
     // Initially hide fields 2-maxFields
-    this.hideFieldsOnInit();
+    hideFieldsOnInit();
 
     // Install handler for add new field
-    this.handleAddNewField();
+    handleAddNewField();
 
     // Install handler for delete field
-    this.handleDeleteFieldText();
+    handleDeleteFieldText();
   }
+
+  run();
 }
 
 // Save Object and Handlers
 var Save = class {
-  constructor() {
+  constructor(fieldID) {
+    this.fieldID = fieldID;
     this.errorMessages = {
       'title':        'Survey must have a title',
       'description':  'Survey must have a description',
@@ -110,7 +121,10 @@ var Save = class {
     this.run();
   }
 
+  getFieldID() { return this.fieldID; }
+
   handleSave() {
+    const fieldID = this.getFieldID();
     var handleSaveError = this.handleSaveError;
     var errorMessages = this.errorMessages;
 
@@ -126,7 +140,7 @@ var Save = class {
 
       // Check for null options 1-5
       for (var i = 1; i <= 5; i++)
-        if (!$('#field' + i).val()) errors.add('numOptions');
+        if (!$(`#${fieldID}${i}`).val()) errors.add('numOptions');
 
       handleSaveError(e, errors, errorMessages);
     });
@@ -146,7 +160,6 @@ var Save = class {
   run() {
     this.handleSave();
   }
-
 }
 
 
@@ -159,6 +172,11 @@ var hideDjangoErrorList = () => { $('.errorlist').hide(); };
 // Run
 $(document).ready(function() {
   hideDjangoErrorList();
-  new Save();
-  new CreateSurvey();
+  const saveHandler = new Save('field');
+
+  // Survey Fields
+  CreateSurvey('field');
+
+  // Demographic Fields
+  CreateSurvey('demographicfield');
 });

@@ -131,9 +131,10 @@ def create_survey(request):
 
     surveyForm = CreateSurveyForm(request.POST)
     surveyFieldsForm = CreateSurveyFieldForm(request.POST)
+    customDemographicsForm = CreateCustomDemographicForm(request.POST)
 
     if request.method == 'POST':
-        if surveyForm.is_valid() and surveyFieldsForm.is_valid():
+        if surveyForm.is_valid() and surveyFieldsForm.is_valid() and customDemographicsForm.is_valid():
             # Create Survey
             survey = Survey(ownerID = request.user,
                             title = surveyForm.cleaned_data['title'],
@@ -145,15 +146,23 @@ def create_survey(request):
             # Create Survey Fields
             data = surveyFieldsForm.cleaned_data
 
+            # Create CustomDemographic Fields
+            demographicData = customDemographicsForm.cleaned_data
+
             for i in range(1, 16):
                 if data.get('field{}'.format(i)):
                     surveyField = SurveyField(surveyID = survey,
                                               value = data.get('field{}'.format(i)))
                     surveyField.save()
 
+                if demographicData.get('demographicfield{}'.format(i)):
+                    demographicField = CustomDemographicField(surveyID = survey,
+                                                              value = demographicData.get('demographicfield{}'.format(i)))
+                    demographicField.save()
+
             return redirect('index')
 
-    context = {'request': request, 'surveyForm': surveyForm, 'surveyFieldsForm': surveyFieldsForm}
+    context = {'request': request, 'surveyForm': surveyForm, 'surveyFieldsForm': surveyFieldsForm, 'customDemographicsForm': customDemographicsForm}
     return HttpResponse(template.render(context, request))
 
 def take_survey(request, survey_id):
@@ -170,13 +179,17 @@ def take_survey(request, survey_id):
     if survey.consentneeded and not hasGivenIRBConsent(request.user, survey):
         return redirect('/irbconsent/{}'.format(survey_id))
 
-    surveyFields = SurveyField.objects.filter(surveyID = survey)
+    surveyFields = getSurveyFields(survey)
 
     takeSurveyForm = TakeSurveyForm(surveyFields, request.POST)
+    takeCustomDemographicForm = TakeCustomDemographicForm(getCustomDemographicFields(survey), request.POST)
+
 
     if request.method == 'POST':
-        if takeSurveyForm.is_valid():
+        if takeSurveyForm.is_valid() and takeCustomDemographicForm.is_valid():
             data = takeSurveyForm.cleaned_data
+            demographicData = takeCustomDemographicForm.cleaned_data
+
             surveyFieldMap = {}
 
             for field in takeSurveyForm.hidden_fields():
@@ -192,25 +205,35 @@ def take_survey(request, survey_id):
 
                 completedSurveyField.save()
 
+            for field in demographicData:
+                fieldID = field[-2:]
+
+                try:
+                    fieldID = int(fieldID)
+                except ValueError:
+                    fieldID = int(fieldID[-1])
+
+                customDemographic = CustomDemographic(userID = request.user,
+                                                      demographicField = CustomDemographicField.objects.get(id = fieldID),
+                                                      response = demographicData[field])
+
+                customDemographic.save()
+
             return redirect('index')
 
         else:
             raise RuntimeError('Invalid form, please try again')
 
 
-    context = {'request': request, 'takeSurveyForm': takeSurveyForm, 'survey': survey, 'surveyFields': surveyFields}
+    context = {'request': request, 'takeSurveyForm': takeSurveyForm, 'survey': survey, 'surveyFields': surveyFields, 'takeCustomDemographicForm': takeCustomDemographicForm}
 
     return HttpResponse(template.render(context, request))
-
 
 class SurveyDelete(DeleteView):
     model = Survey
     success_url = reverse_lazy('surveys')
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
-
-
-
 
 def view_survey_self_response(request, survey_id):
     if not (request.user.is_authenticated() and not request.session.get('researcher')):
@@ -220,8 +243,9 @@ def view_survey_self_response(request, survey_id):
 
     survey = getSurvey(survey_id)
     completedSurvey = getSurveyResponse(request.user, survey)
+    completedSurveyDemographics = getCustomDemographicResponse(request.user, survey)
 
-    context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey}
+    context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey, 'completedSurveyDemographics': completedSurveyDemographics}
 
     return HttpResponse(template.render(context, request))
 
@@ -266,11 +290,11 @@ def researcher_view_results(request, survey_id):
 
     for participant in surveyParticipants:
         participantResults[participant] = (getSurveyResponse(participant, survey))
+        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
 
     context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
     return HttpResponse(template.render(context, request))
-
 
 def irb_consent_form(request, survey_id):
     if not (request.user.is_authenticated() and not request.session.get('researcher')):
