@@ -38,7 +38,6 @@ const CreateSurvey = (fieldID) => {
       e.preventDefault();
 
       let fieldsVisible = getFieldsVisible();
-      console.log(`${fieldID} clicked\n${fieldsVisible} fields visible`);
 
       if ($(`#${fieldID}${fieldsVisible}`).val() && fieldsVisible < maxFields) {
         fieldsVisible = incrementFieldsVisible();
@@ -85,7 +84,7 @@ const CreateSurvey = (fieldID) => {
       }
 
     } else {
-      for (var i = deletedFieldNumber; i < fieldsVisible; i++) {
+      for (let i = deletedFieldNumber; i < fieldsVisible; i++) {
         $(`#${fieldID}${i}`).val($(`#${fieldID}${i + 1}`).val());
         if (i + 1 == fieldsVisible) $(`#${fieldID}${fieldsVisible}`).hide();
       }
@@ -110,13 +109,15 @@ const CreateSurvey = (fieldID) => {
 }
 
 // Save Object and Handlers
-var Save = class {
+const Save = class {
   constructor(fieldID) {
     this.fieldID = fieldID;
     this.errorMessages = {
       'title':        'Survey must have a title',
       'description':  'Survey must have a description',
-      'numOptions':   'Survey must have a minimum of 5 options'};
+      'numOptions':   'Survey must have a minimum of 5 options',
+      'duplicates':   'Survey cannot have duplicate options',
+      'nullFields':   'Survey cannot have null fields'};
 
     this.run();
   }
@@ -125,12 +126,14 @@ var Save = class {
 
   handleSave() {
     const fieldID = this.getFieldID();
-    var handleSaveError = this.handleSaveError;
-    var errorMessages = this.errorMessages;
+    const handleSaveError = this.handleSaveError;
+    const errorMessages = this.errorMessages;
 
     $('#save-survey').click(function(e) {
 
-      var errors = new Set();
+      const errors = new Set();
+
+      const options = new Set();
 
       // Check for null title
       if (!$('#title').val()) errors.add('title');
@@ -139,8 +142,21 @@ var Save = class {
       if (!$('#description').val()) errors.add('description');
 
       // Check for null options 1-5
-      for (var i = 1; i <= 5; i++)
+      for (let i = 1; i <= 5; i++)
         if (!$(`#${fieldID}${i}`).val()) errors.add('numOptions');
+
+      // Check for duplicate values
+      for (let i = 1; i <= 15; i++) {
+        let fieldValue = $(`#${fieldID}${i}`).val().trim()
+        if (fieldValue && options.has(fieldValue)) errors.add('duplicates');
+        options.add(fieldValue);
+      }
+
+      // Check for null fields
+      for (let i = 1; i <= 15; i++) {
+        let fieldValue = $(`#${fieldID}${i}`).val();
+        if (fieldValue && !fieldValue.trim()) errors.add('nullFields');
+      }
 
       handleSaveError(e, errors, errorMessages);
     });
@@ -149,7 +165,7 @@ var Save = class {
   handleSaveError(e, errors, errorMessages) {
     if (errors.size) {
       e.preventDefault();
-      var errorMsg = ''
+      let errorMsg = ''
       for (let error of errors) errorMsg += '- ' + errorMessages[error] + "<br>";
 
       $('#form-errors').css('color', 'red');
@@ -167,7 +183,7 @@ var Save = class {
 // Django by default will display an ugly <ul> that says "this field is required" for required fields
 // This gets around that by just hiding the errorlist class.
 // First 5 survey options are required.
-var hideDjangoErrorList = () => { $('.errorlist').hide(); };
+const hideDjangoErrorList = () => { $('.errorlist').hide(); };
 
 // Run
 $(document).ready(function() {
