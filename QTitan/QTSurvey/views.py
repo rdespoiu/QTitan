@@ -1,12 +1,6 @@
 # Django Imports
-from django.views.generic.edit import DeleteView
-from django.core.urlresolvers import reverse_lazy
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.template import loader
-from django.template.response import TemplateResponse
-from django.contrib.auth import (authenticate, get_user_model, login, logout,)
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate, get_user_model, login, logout
 
 # Models
 from .models import *
@@ -14,20 +8,18 @@ from .models import *
 # Controllers
 from .Controllers import *
 
-# Utility
-import datetime
-from _datetime import datetime
+# Templates
+from .templates import *
 
 
+#################
+# GENERIC VIEWS #
+#################
 
-# Views
-
-# Index only redirects. If there is no user session, redirect to login page.
-# If there IS a session, redirect to 'surveys'
+# Index is a redirector
 def index(request):
     if isAuthenticated(request.user):
-        if not isResearcher(request.session):
-            setResearcher(request)
+        setResearcher(request)
         return redirect('surveys')
 
     return redirect('login')
@@ -36,8 +28,6 @@ def index(request):
 def register(request):
     if isAuthenticated(request.user):
         return redirect('index')
-
-    template = setTemplate('QTSurvey/register.html')
 
     userForm = UserForm(request.POST or None)
     demographicsForm = BaseDemographicForm(request.POST or None)
@@ -71,63 +61,51 @@ def register(request):
 
     context = {'request': request, 'userForm': userForm, 'demographicsForm': demographicsForm}
 
-    return renderPage(template, context, request)
+    return renderPage(REGISTRATION_PAGE, context, request)
 
-# Surveys (Researcher/Subject)
+# Surveys
 def surveys(request):
     if not isAuthenticated(request.user):
         return redirect('index')
 
     context = {'request': request}
 
-    if isResearcher(request.session):
-        template = setTemplate('QTSurvey/researcher-surveys.html')
+    if isResearcher(request):
+        template = RESEARCHER_SURVEYS
         context['researcherSurveys'] = getResearcherSurveys(request)
     else:
-        template = setTemplate('QTSurvey/subject-available-surveys.html')
+        template = SUBJECT_AVAILABLE_SURVEYS
         context['subjectAvailableSurveys'] = getSubjectAvailableSurveys(request)
 
     return renderPage(template, context, request)
 
-# Analytics (Researcher)
-def researcher_analytics(request):
-    if not (isAuthenticated(request.user) and isResearcher(request.session)):
-        return redirect('index')
 
-    template = setTemplate('QTSurvey/researcher-analytics.html')
+####################
+# RESEARCHER VIEWS #
+####################
+
+# Analytics
+def researcher_analytics(request):
+    if not (isResearcher(request)):
+        return redirect('index')
 
     context = {'request': request, 'researcherSurveys': getResearcherSurveys(request)}
 
-    return renderPage(template, context, request)
+    return renderPage(RESEARCHER_ANALYTICS, context, request)
 
-# Subject View (Researcher)
+# Subjects
 def researcher_subjects(request):
-    if not (isAuthenticated(request.user) and isResearcher(request.session)):
+    if not isResearcher(request):
         return redirect('index')
-
-    template = setTemplate('QTSurvey/researcher-subjects.html')
 
     context = {'request': request, 'researcherSubjects': getResearcherSubjects(request)}
 
-    return renderPage(template, context, request)
+    return renderPage(RESEARCHER_SUBJECTS, context, request)
 
-# Completed Surveys (Subject)
-def subject_completed_surveys(request):
-    if not (isAuthenticated(request.user) and not isResearcher(request.session)):
-        return redirect('index')
-
-    template = setTemplate('QTSurvey/subject-completed-surveys.html')
-
-    context = {'request': request, 'subjectCompletedSurveys': getSubjectCompletedSurveys(request)}
-
-    return renderPage(template, context, request)
-
-# Create Survey (Researcher)
+# Create Survey
 def create_survey(request):
-    if not (isAuthenticated(request.user) and isResearcher(request.session)):
+    if not isResearcher(request):
         return redirect('index')
-
-    template = setTemplate('QTSurvey/create-survey.html')
 
     surveyForm = CreateSurveyForm(request.POST)
     surveyFieldsForm = CreateSurveyFieldForm(request.POST)
@@ -164,14 +142,72 @@ def create_survey(request):
 
     context = {'request': request, 'surveyForm': surveyForm, 'surveyFieldsForm': surveyFieldsForm, 'customDemographicsForm': customDemographicsForm}
 
-    return renderPage(template, context, request)
+    return renderPage(CREATE_SURVEY, context, request)
 
-def take_survey(request, survey_id):
-    if not (isAuthenticated(request.user) and not isResearcher(request.session)):
+# View aggregate results
+def researcher_view_results(request, survey_id):
+    if not isResearcher(request):
         return redirect('index')
 
+    survey = getSurvey(survey_id)
+    surveyParticipants = getSurveyTakers(survey)
+    participantResults = {}
 
-    template = setTemplate('QTSurvey/take-survey.html')
+    for participant in surveyParticipants:
+        participantResults[participant] = (getSurveyResponse(participant, survey))
+        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
+
+    context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+
+    return renderPage(RESEARCHER_SURVEY_RESPONSES, context, request)
+
+# Survey invite
+def researcher_invite(request, subject_id):
+    if not isResearcher(request):
+        return redirect('index')
+
+    user = User.objects.get(id = subject_id)
+
+    researcherInvites = []
+
+    # HACKY FIX FOR REMOVING SURVEYS THAT A SUBJECT ALREADY HAS ACCESS TO. FIX LATER
+    for survey in getResearcherInvite(request.user):
+        try:
+            SurveyAccess.objects.get(surveyID = Survey.objects.get(id = survey.id), userID = user)
+        except:
+            researcherInvites.append(survey)
+
+    if request.method == 'POST':
+        some_var = request.POST.getlist('checks')
+
+        for name in some_var:
+            subjectInvite = SurveyAccess(surveyID = Survey.objects.get(id = name),
+                                         userID = User.objects.get(id = user.id ))
+            subjectInvite.save()
+        return redirect('index')
+
+    context = {'request': request, 'userid':user, 'researcherInvite': researcherInvites}
+
+    return renderPage(RESEARCHER_INVITE, context, request)
+
+
+#################
+# SUBJECT VIEWS #
+#################
+
+# Completed Surveys
+def subject_completed_surveys(request):
+    if not isSubject(request):
+        return redirect('index')
+
+    context = {'request': request, 'subjectCompletedSurveys': getSubjectCompletedSurveys(request)}
+
+    return renderPage(SUBJECT_COMPLETED_SURVEYS, context, request)
+
+# Take Survey
+def take_survey(request, survey_id):
+    if not isSubject(request):
+        return redirect('index')
 
     survey = Survey.objects.get(id = survey_id)
 
@@ -229,19 +265,12 @@ def take_survey(request, survey_id):
 
     context = {'request': request, 'takeSurveyForm': takeSurveyForm, 'survey': survey, 'surveyFields': surveyFields, 'takeCustomDemographicForm': takeCustomDemographicForm}
 
-    return renderPage(template, context, request)
+    return renderPage(TAKE_SURVEY, context, request)
 
-class SurveyDelete(DeleteView):
-    model = Survey
-    success_url = reverse_lazy('surveys')
-    def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
-
+# View self response
 def view_survey_self_response(request, survey_id):
-    if not (isAuthenticated(request.user) and not isResearcher(request.session)):
+    if not isSubject(request):
         return redirect('index')
-
-    template = setTemplate('QTSurvey/subject-view-survey-response.html')
 
     survey = getSurvey(survey_id)
     completedSurvey = getSurveyResponse(request.user, survey)
@@ -249,61 +278,13 @@ def view_survey_self_response(request, survey_id):
 
     context = {'request': request, 'survey': survey, 'completedSurvey': completedSurvey, 'completedSurveyDemographics': completedSurveyDemographics}
 
-    return renderPage(template, context, request)
+    return renderPage(SUBJECT_SURVEY_SELF_RESPONSE, context, request)
 
-def researcher_invite (request, subject_id):
-    if not (isAuthenticated(request.user) and isResearcher(request.session)):
-        return redirect('index')
-
-    template = setTemplate('QTSurvey/researcher-invite.html')
-
-    user = User.objects.get(id = subject_id)
-
-    researcherInvites = []
-
-    # HACKY FIX FOR REMOVING SURVEYS THAT A SUBJECT ALREADY HAS ACCESS TO. FIX LATER
-    for survey in getResearcherInvite(request.user):
-        try:
-            SurveyAccess.objects.get(surveyID = Survey.objects.get(id = survey.id), userID = user)
-        except:
-            researcherInvites.append(survey)
-
-    if request.method == 'POST':
-        some_var = request.POST.getlist('checks')
-
-        for name in some_var:
-            subjectInvite = SurveyAccess(surveyID = Survey.objects.get(id = name),
-                                         userID = User.objects.get(id = user.id ))
-            subjectInvite.save()
-        return redirect('index')
-
-    context = {'request': request, 'userid':user, 'researcherInvite': researcherInvites}
-
-    return renderPage(template, context, request)
-
-def researcher_view_results(request, survey_id):
-    if not (isAuthenticated(request.user) and isResearcher(request.session)):
-        return redirect('index')
-
-    template = setTemplate('QTSurvey/researcher_view_results.html')
-
-    survey = getSurvey(survey_id)
-    surveyParticipants = getSurveyTakers(survey)
-    participantResults = {}
-
-    for participant in surveyParticipants:
-        participantResults[participant] = (getSurveyResponse(participant, survey))
-        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
-
-    context = {'request': request, 'survey': survey, 'participantResults': participantResults}
-
-    return renderPage(template, context, request)
-
+# IRB Consent
 def irb_consent_form(request, survey_id):
-    if not (isAuthenticated(request.user) and not isResearcher(request.session)):
+    if not isSubject(request):
         return redirect('index')
 
-    template = setTemplate('QTSurvey/irb-consent.html')
     survey = getSurvey(survey_id)
 
     if not hasAccess(request.user, survey):
@@ -320,4 +301,4 @@ def irb_consent_form(request, survey_id):
 
     context = {'request': request, 'survey': survey}
 
-    return renderPage(template, context, request)
+    return renderPage(IRB_CONSENT, context, request)
