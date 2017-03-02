@@ -236,8 +236,11 @@ def take_survey(request, survey_id):
 
 
             for field in surveyFieldMap:
+                # Convert ampersand from html to valid string: &amp; => &
+                parsedField = field.replace('&amp;', '&')
+
                 completedSurveyField = CompletedSurvey(surveyID = survey,
-                                                       surveyFieldID = SurveyField.objects.get(value = field, surveyID = survey),
+                                                       surveyFieldID = SurveyField.objects.get(value = parsedField, surveyID = survey),
                                                        userID = request.user,
                                                        orderPosition = surveyFieldMap[field])
 
