@@ -2,32 +2,44 @@
 {% extends "QTSurvey/base/base.html" %}
 {% load static %}
 
-{% block researcher_view_responses %}
+{% block researcher_survey_analytics %}
 
-<div class="take-survey-box">
+<div class="survey-analysis">
   <center>
-    <h2>Subject Responses for: {{ survey.title }}</h2>
+    <h2>Survey Analysis for: {{ survey.title }}</h2>
   </center>
 
-  {% for participant, response in participantResults.items %}
-    <br>
-    <div class="row">
-      <div class="col-md-6"><h3 align="left">{{ participant.first_name|add:" "|add:participant.last_name }}</h3></div>
-      <div class="col-md-6"><h3 align="right">{{ participant.email }}</h3></div>
-    </div>
-    <ul id="sortableSurveyFields">
-      {% for field in response.surveyResponse %}
-        <li>{{ field.surveyFieldID.value }}</li>
-      {% endfor %}
+	<br>
+	<div class="row">
+		<div class="col-md-6"><h3 align="left">Positive Concensus</h3></div>
+	</div>
 
-      <br><br>
-      <center><u><h4>Demographics</h4></u></center>
-      {% for field in response.surveyDemographics %}
-        <li>{{ field.value }}: {{ field.response }}</l1>
-      {% endfor %}
-    </ul>
-  {% endfor %}
+	<br>
+	<div class="row">
+		<div class="col-md-6"><h3 align="left">Negative Concensus</h3></div>
+	</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<br>
+	<div class="row">
+		<div class="col-md-6"><h3 align="left">Clusters</h3></div>
+			{% for cluster in clusters %}
+			<br>
+			<div class="row"><h4 align="left"> {{ cluster.name }}</h4></div>
+			<div class="row"><h5 align="left"> Most agreed responses:"</h5></div>
+			<ul id="agreequestions">
+				{% for agree_question in cluster.agree_questions %}	
+					<li>{{ agree_question }}</li>
+				{% endfor %}
+			</ul>
+			<div class="row"><h5 align="left">Most Disagreed responses:"</h5></div>
+			<ul id="disagreequestions">
+				{% for disagree_question in cluster.disagree_questions %}
+					<li>{{ disagree_question }} </li>
+				{% endfor %}
+			</ul>
+			{% endfor %}
+	</div>
+</div>
 
 {% endblock %}
+
