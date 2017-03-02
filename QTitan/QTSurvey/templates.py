@@ -30,6 +30,8 @@ RESEARCHER_INVITE = setTemplate('QTSurvey/researcher-invite.html')
 # Researcher survey responses
 RESEARCHER_SURVEY_RESPONSES = setTemplate('QTSurvey/researcher_view_results.html')
 
+# Researcher Analytics
+RESEARCHER_SURVEY_ANALYTICS = setTemplate('QTSurvey/researcher_survey_analytics.html')
 
 #################
 # SUBJECT VIEWS #

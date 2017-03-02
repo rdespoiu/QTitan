@@ -11,6 +11,8 @@ from .Controllers import *
 # Templates
 from .templates import *
 
+# chartit
+from chartit import PivotDataPool, PivotChart
 
 #################
 # GENERIC VIEWS #
@@ -155,11 +157,30 @@ def researcher_view_results(request, survey_id):
 
     for participant in surveyParticipants:
         participantResults[participant] = (getSurveyResponse(participant, survey))
-        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
+        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}	
+		
 
     context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
     return renderPage(RESEARCHER_SURVEY_RESPONSES, context, request)
+
+# View survey analytics
+def researcher_survey_analytics(request, survey_id):
+	if not isResearcher(request):
+		return redirect('index')
+
+	survey = getSurvey(survey_id)
+	surveyParticipants = getSurveyTakers(survey)
+	participantResults = {}
+
+	for participant in surveyParticipants:
+		participantResults[participant] = (getSurveyResponse(participant, survey))
+		participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
+
+
+	context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+
+	return renderPage(RESEARCHER_SURVEY_ANALYTICS, context, request)
 
 # Survey invite
 def researcher_invite(request, subject_id):
