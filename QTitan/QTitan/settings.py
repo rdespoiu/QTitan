@@ -27,7 +27,7 @@ SECRET_KEY = '+1mo&jtf+$cx^u1devpe)7dbc*^sliwb_u6ko$se+gq$8@t3nq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Redirection after successful login
 LOGIN_REDIRECT_URL = 'index'
