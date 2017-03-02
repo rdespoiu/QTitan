@@ -11,6 +11,8 @@ from .Controllers import *
 # Templates
 from .templates import *
 
+# chartit
+from chartit import PivotDataPool, PivotChart
 
 #################
 # GENERIC VIEWS #
@@ -155,7 +157,8 @@ def researcher_view_results(request, survey_id):
 
     for participant in surveyParticipants:
         participantResults[participant] = (getSurveyResponse(participant, survey))
-        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
+        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}	
+		
 
     context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
@@ -173,6 +176,7 @@ def researcher_survey_analytics(request, survey_id):
 	for participant in surveyParticipants:
 		participantResults[participant] = (getSurveyResponse(participant, survey))
 		participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
+
 
 	context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
