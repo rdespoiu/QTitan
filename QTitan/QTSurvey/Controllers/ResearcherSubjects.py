@@ -10,10 +10,15 @@ def getResearcherSubjects(request):
 
     # Query returning all subjects from BaseDemographic
     subjects = BaseDemographic.objects.all()
-
+    
 
     for subject in subjects:
+        try:
         # Add a new age value calculated from DOB
-        subject.age = calculateAge(subject.dob, today)
+            subject.age = calculateAge(subject.dob, today)
+            subject.email = User.objects.get(id = subject.userID.id).email
+        except:
+            pass
+            
 
     return subjects
