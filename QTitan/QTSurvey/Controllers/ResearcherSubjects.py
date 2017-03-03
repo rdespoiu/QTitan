@@ -13,12 +13,11 @@ def getResearcherSubjects(request):
     
 
     for subject in subjects:
-        try:
         # Add a new age value calculated from DOB
-            subject.age = calculateAge(subject.dob, today)
+        subject.age = calculateAge(subject.dob, today)
+        try:
             subject.email = User.objects.get(id = subject.userID.id).email
         except:
-            pass
-            
+            subject.email = "N/A"
 
     return subjects
