@@ -86,15 +86,6 @@ def surveys(request):
 # RESEARCHER VIEWS #
 ####################
 
-# Analytics
-def researcher_analytics(request):
-    if not (isResearcher(request)):
-        return redirect('index')
-
-    context = {'request': request, 'researcherSurveys': getResearcherSurveys(request)}
-
-    return renderPage(RESEARCHER_ANALYTICS, context, request)
-
 # Subjects
 def researcher_subjects(request):
     if not isResearcher(request):
@@ -157,8 +148,8 @@ def researcher_view_results(request, survey_id):
 
     for participant in surveyParticipants:
         participantResults[participant] = (getSurveyResponse(participant, survey))
-        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}	
-		
+        participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
+
 
     context = {'request': request, 'survey': survey, 'participantResults': participantResults}
 
