@@ -1,1 +1,2 @@
+django_chartit==0.2.9
 Django==1.10.5

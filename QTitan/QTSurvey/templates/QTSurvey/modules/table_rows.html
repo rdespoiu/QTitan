@@ -19,7 +19,7 @@
       <td class="custom-text">{{ survey.distribution }}</td>
       <td class="custom-text">{{ survey.consentneeded }}</td>
       <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/viewresults/{{ survey.id }}';">View Results</button></td>
-      <td><button class="btn btn-primary btn-block custom-button">Run Analytics</button></td>
+      <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/surveyanalytics/{{ survey.id }}';">Run Analytics</button></td>
     </tr>
   {% endfor %}
 
