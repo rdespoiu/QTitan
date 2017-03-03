@@ -293,11 +293,13 @@ html {
 }
 
 .login-box form input {
+    color:#ffffff;
   background-color: #212121;
   opacity: 0.8;
 }
 
 .login-box form input:focus {
+    color: #ffffff;
   opacity: 1.0;
   outline: none;
   box-shadow: none;
