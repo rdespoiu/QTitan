@@ -7,6 +7,7 @@
 <div class="take-survey-box">
   <center>
     <h2>Subject Responses for: {{ survey.title }}</h2>
+    <a class="btn btn-primary custom-button" id="CSVDownload" href="{% url 'download' filename=filename %}">Download as CSV</a>
   </center>
 
   {% for participant, response in participantResults.items %}

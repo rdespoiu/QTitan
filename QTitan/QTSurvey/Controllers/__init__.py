@@ -16,6 +16,7 @@ from .GetAuthStatus import isAuthenticated, isResearcher, isSubject
 from .SetAuthStatus import setResearcher
 from .SetTemplate import setTemplate
 from .RenderPage import renderPage
+from .CSVExport import resultsToCSV
 
 # Forms
 from .UserForm import UserForm
