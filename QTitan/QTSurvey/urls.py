@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, { 'next_page': views.index }, name = 'logout'),
     url(r'^surveys/', views.surveys, name = 'surveys'),
     url(r'^analytics/', views.researcher_analytics, name = 'analytics'),
-		url(r'^surveyanalytics/(?P<survey_id>\w{0,50})/$', views.researcher_survey_analytics, name = 'surveyanalytics'),
+    url(r'^surveyanalytics/(?P<survey_id>\w{0,50})/$', views.researcher_survey_analytics, name = 'surveyanalytics'),
     url(r'^subjects/', views.researcher_subjects, name = 'subjects'),
     url(r'^completed/', views.subject_completed_surveys, name = 'completed'),
     url(r'^create/', views.create_survey, name = 'create'),
@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^invite/(?P<subject_id>\d+)/$',views.researcher_invite, name = 'invite'),
     url(r'^viewresults/(?P<survey_id>\w{0,50})/$', views.researcher_view_results, name='viewresults'),
     url(r'^irbconsent/(?P<survey_id>\w{0,50})/$', views.irb_consent_form, name='irbconsent'),
+    url(r'^download/(?P<filename>.+)$', views.download, name='download'),
 ]
