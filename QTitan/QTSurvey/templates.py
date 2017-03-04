@@ -15,9 +15,6 @@ REGISTRATION_PAGE = setTemplate('QTSurvey/register.html')
 # Researcher surveys
 RESEARCHER_SURVEYS = setTemplate('QTSurvey/researcher-surveys.html')
 
-# Researcher analytics
-RESEARCHER_ANALYTICS = setTemplate('QTSurvey/researcher-analytics.html')
-
 # Researcher subjects
 RESEARCHER_SUBJECTS = setTemplate('QTSurvey/researcher-subjects.html')
 
