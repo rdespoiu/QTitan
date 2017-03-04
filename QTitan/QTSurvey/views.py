@@ -91,15 +91,6 @@ def surveys(request):
 # RESEARCHER VIEWS #
 ####################
 
-# Analytics
-def researcher_analytics(request):
-    if not (isResearcher(request)):
-        return redirect('index')
-
-    context = {'request': request, 'researcherSurveys': getResearcherSurveys(request)}
-
-    return renderPage(RESEARCHER_ANALYTICS, context, request)
-
 # Subjects
 def researcher_subjects(request):
     if not isResearcher(request):
