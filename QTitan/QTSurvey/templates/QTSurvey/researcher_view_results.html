@@ -11,23 +11,33 @@
 
   {% for participant, response in participantResults.items %}
     <br>
+
     <div class="row">
-      <div class="col-md-6"><h3 align="left">{{ participant.first_name|add:" "|add:participant.last_name }}</h3></div>
+      <div class="col-md-6">
+        <h3 align="left">
+          <span participantID="{{ participant.id }}" class="minimizer btn btn-danger">-</span>
+          {{ participant.first_name|add:" "|add:participant.last_name }}
+        </h3>
+      </div>
+
       <div class="col-md-6"><h3 align="right">{{ participant.email }}</h3></div>
     </div>
-    <ul id="sortableSurveyFields">
-      {% for field in response.surveyResponse %}
-        <li>{{ field.surveyFieldID.value }}</li>
-      {% endfor %}
+    <div id="participant{{ participant.id }}">
+      <ul id="sortableSurveyFields">
+        {% for field in response.surveyResponse %}
+          <li>{{ field.surveyFieldID.value }}</li>
+        {% endfor %}
 
-      <br><br>
-      <center><u><h4>Demographics</h4></u></center>
-      {% for field in response.surveyDemographics %}
-        <li>{{ field.value }}: {{ field.response }}</l1>
-      {% endfor %}
-    </ul>
+        <br><br>
+        <center><u><h4>Demographics</h4></u></center>
+        {% for field in response.surveyDemographics %}
+          <li>{{ field.value }}: {{ field.response }}</l1>
+        {% endfor %}
+      </ul>
+    </div>
   {% endfor %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="{% static 'QTSurvey/results-minimizer.js' %}"></script>
 
 {% endblock %}
