@@ -1,6 +1,11 @@
+import os
+import mimetypes
+
 # Django Imports
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.http import HttpResponse
+from django.core.files import File
 
 # Models
 from .models import *
@@ -150,8 +155,10 @@ def researcher_view_results(request, survey_id):
         participantResults[participant] = (getSurveyResponse(participant, survey))
         participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
 
+    if not surveyParticipants:
+        return redirect('index')
 
-    context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+    context = {'request': request, 'survey': survey, 'participantResults': participantResults, 'filename': resultsToCSV(survey, participantResults)}
 
     return renderPage(RESEARCHER_SURVEY_RESPONSES, context, request)
 
@@ -201,6 +208,31 @@ def researcher_invite(request, subject_id):
     context = {'request': request, 'userid':user, 'researcherInvite': researcherInvites}
 
     return renderPage(RESEARCHER_INVITE, context, request)
+
+# Download file
+def download(request, filename):
+    # Get file path
+    filepath = '{}/QTSurvey/SurveyResultCSV/{}'.format(os.path.realpath(''), filename)
+
+    # Open the file
+    f = open(filepath, 'r')
+
+    # Set Django File wrapper
+    downloadable = File(f)
+
+    # Guess mimetype of file
+    filemimetype = mimetypes.guess_type(filepath)
+
+    # Set HttpResponse
+    response = HttpResponse(downloadable, content_type=filemimetype)
+
+    # Response header => downloadable
+    response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+
+    # Close the file
+    f.close()
+
+    return response
 
 
 #################
