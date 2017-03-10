@@ -168,15 +168,8 @@ def researcher_survey_analytics(request, survey_id):
 		return redirect('index')
 
 	survey = getSurvey(survey_id)
-	surveyParticipants = getSurveyTakers(survey)
-	participantResults = {}
-
-	for participant in surveyParticipants:
-		participantResults[participant] = (getSurveyResponse(participant, survey))
-		participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
-
-
-	context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+	kmeans = identifyClusters(survey_id)
+	context = {'request': request, 'survey': survey, 'kmeans': kmeans}
 
 	return renderPage(RESEARCHER_SURVEY_ANALYTICS, context, request)
 
