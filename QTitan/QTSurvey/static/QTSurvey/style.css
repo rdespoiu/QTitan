@@ -311,3 +311,12 @@ html {
   text-align: center;
   border: transparent;
 }
+
+ul li{
+	 padding:8px; 
+	 font-style:normal; 
+	 font-family:Arial; 
+	 font-size:13px; 
+	 color:#eee; 
+	 border-left: 1px solid #999;
+}

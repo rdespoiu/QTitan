@@ -17,6 +17,7 @@ from .SetAuthStatus import setResearcher
 from .SetTemplate import setTemplate
 from .RenderPage import renderPage
 from .CSVExport import resultsToCSV
+from .ViewProfile import getProfileView
 
 # Forms
 from .UserForm import UserForm

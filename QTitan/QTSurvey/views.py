@@ -349,3 +349,12 @@ def irb_consent_form(request, survey_id):
     context = {'request': request, 'survey': survey}
 
     return renderPage(IRB_CONSENT, context, request)
+
+# Profile
+def profile_view(request,profile_user):
+    if not isAuthenticated(request.user):
+        return redirect('index')
+    
+    profileview = getProfileView(profile_user)
+    context = {'request':request, 'profileview': profileview}
+    return renderPage(PROFILE_PAGE, context, request)

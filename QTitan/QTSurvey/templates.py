@@ -4,6 +4,8 @@ from .Controllers import setTemplate
 # GENERIC VIEWS #
 #################
 
+PROFILE_PAGE = setTemplate('QTSurvey/profile-view.html')
+
 # Registration page
 REGISTRATION_PAGE = setTemplate('QTSurvey/register.html')
 
