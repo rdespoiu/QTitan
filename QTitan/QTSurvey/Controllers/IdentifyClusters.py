@@ -3,6 +3,7 @@ import numpy as np
 import math
 import random
 import copy
+import sys
 from .GetAnalyticsData import getAnalyticsData
 from .GetSurveyFields import getSurveyFields
 
@@ -23,6 +24,13 @@ class RelationGraph:
 		for node in self.Nodes:
 			self.Connect(node)
 	
+	def printNodes(self):
+		for node in self.Nodes:
+			sys.stdout.write("{} connected to: [".format(node.participant.username))
+			for c in node.connections:
+				sys.stdout.write("{}: {}, ".format(c.participant.username, node.connections[c]))
+			print("]")
+
 	#Connect the node to the graph. The more strongly a node agrees on a response, the stronger the connection.
 	# The sum of these agreements determines the overall connection of the node.
 	# Therefore, nodes which have more important questions in common will be more strongly connected.
@@ -63,9 +71,9 @@ class RelationGraph:
 		for node in self.Nodes:
 			for response in node.responses:
 				if response.surveyFieldID.value in weights:
-					weights[response.surveyFieldID.value] += getScore(response.orderPosition)
+					weights[response.surveyFieldID.value] += self.getScore(response.orderPosition)
 				else:
-					weights[response.surveyFieldID.value] = getScore(response.orderPosition)
+					weights[response.surveyFieldID.value] = self.getScore(response.orderPosition)
 		return weights
 	
 	def getClusters(self):
@@ -176,6 +184,19 @@ class Cluster:
 		else:
 			return False
 
+	def consensus(self, g):
+		self.weights = {}
+		for node in self.Nodes:
+			for response in node.responses:
+				if response.surveyFieldID.value in self.weights:
+					self.weights[response.surveyFieldID.value] += g.getScore(response.orderPosition)
+				else:
+					self.weights[response.surveyFieldID.value] = g.getScore(response.orderPosition)
+
+		  
+
+
+
 
 
 ########## Other functions #############
@@ -195,6 +216,19 @@ def getOptionScore(survey, pos):
 	return score
 
 def identifyClusters(survey):
+	surveyResults = getAnalyticsData(survey)
+	fields = getSurveyFields(survey)
+	numOptions = len(fields)
+	
+	graph = RelationGraph(surveyResults, numOptions)
+	clusters = graph.getClusters()
+
+	for c in clusters:
+		c.consensus(graph)
+
+	return graph, clusters
+
+def identifyClustersOld(survey):
 	fields = getSurveyFields(survey)
 	numOptions = len(fields)
 	careSize = math.floor(numOptions / 10) + 1

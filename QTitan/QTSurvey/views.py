@@ -168,8 +168,10 @@ def researcher_survey_analytics(request, survey_id):
 		return redirect('index')
 
 	survey = getSurvey(survey_id)
-	kmeans = identifyClusters(survey_id)
-	context = {'request': request, 'survey': survey, 'kmeans': kmeans}
+	g, clusters = identifyClusters(survey_id)
+
+
+	context = {'request': request, 'survey': survey, 'g': g, 'clusters': clusters, 'totalConsensus': g.getTotalConsensus()}
 
 	return renderPage(RESEARCHER_SURVEY_ANALYTICS, context, request)
 
