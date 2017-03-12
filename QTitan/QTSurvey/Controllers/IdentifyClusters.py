@@ -88,18 +88,17 @@ class RelationGraph:
 		currentWeight = maxCon
 		clusteredNodes = []
 		cnum = 0
+		
+		#create a pool of nodes to use, starting with all the nodes in this graph
 		pool = []
 		for n in self.Nodes:
-			pool.append(n)
-		
-		### DEBUG
+			pool.append(n)	
 			
 		
 		node = rn # start with the random node from above
 		while pool:
 			#If we have tried all the possible weights for this node
 			if currentWeight < minCon:
-				print("Iterating node")
 				node = random.choice(pool) # pick a random new node from those remaining
 				currentWeight = maxCon # reset the weight we are looking for
 
@@ -121,7 +120,6 @@ class RelationGraph:
 				self.clusters.append(c)
 
 			# if we didn't find a connection in this node at the current weight
-			print("iterating weight")
 			currentWeight -= (maxScore * 2) # decrement the weight we are looking for by 2 questions
 			
 			
@@ -131,14 +129,7 @@ class RelationGraph:
 	# because it is recursive, it'll also add similar relationships this node has with other nodes it is connected to.
 	def assignToCluster(self, maxWeight, minWeight, pool, cluster, node, parent):
 		if parent != node and parent.connections[node] >= minWeight and parent.connections[node] <= maxWeight:
-			print("adding node {}, {} to cluster {}".format(node.participant.username, node, cluster))
-			if node in pool:
-				print("node in pool!")
-			else:
-				print("Node not in pool?")
-
 			added = cluster.addNode(node)
-			#if node in pool:
 			pool.remove(node)
 			
 			if added:
@@ -173,9 +164,10 @@ class Cluster:
 		self.Nodes = []
 		self.Nodes.append(initialNode)
 		self.startWeight = initialWeight
+		self.name = "Cluster " + str(self.identifier)
 
 	def __str__(self):
-		return "Cluster" + str(self.identifier)
+		return self.name
 
 	def addNode(self, node):
 		if not node in self.Nodes:
