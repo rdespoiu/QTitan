@@ -64,7 +64,9 @@
       <li class="custom-text"><h2>Last Name:   {{ profilev.last_name }} </h2></li>
       <li class="custom-text"><h2>Email:   {{ profilev.email }} </h2></li>
       <li class="custom-text"><h2>DOB:   {{ profilev.dob }} </h2></li>
+      <li class="custom-text"><h2>Age:   {{ profilev.age }} </h2></li>
       <li class="custom-text"><h2>Phone:   {{ profilev.phone }} </h2></li>
+      
    {% endfor %}
    {%for profile in profileview %}
       {% if profile.value != Null %}
