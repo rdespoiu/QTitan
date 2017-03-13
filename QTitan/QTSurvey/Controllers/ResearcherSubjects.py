@@ -10,7 +10,6 @@ def getResearcherSubjects(request):
 
     # Query returning all subjects from BaseDemographic
     subjects = BaseDemographic.objects.all()
-    
 
     for subject in subjects:
         # Add a new age value calculated from DOB
@@ -20,4 +19,5 @@ def getResearcherSubjects(request):
         except:
             subject.email = "N/A"
 
-    return subjects
+    # Filters out any users that are members of any group
+    return list(filter(lambda subject : not len(subject.userID.groups.filter()), subjects))
