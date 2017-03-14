@@ -2,7 +2,7 @@
   {% for survey in researcherSurveys %}
     <tr>
       <td class="custom-text">{{ survey.id }}</td>
-      <td class="custom-text">{{ survey.title }}</td>
+      <td class="custom-text"  onclick="location.href = '/previewsurvey/{{ survey.id }}';">{{survey.title}}</td>
       <td class="custom-text">{{ survey.participants }}</td>
       <td class="custom-text">{{ survey.distribution }}</td>
       <td class="custom-text">{{ survey.consentneeded }}</td>
@@ -34,7 +34,7 @@
   {% for survey in subjectAvailableSurveys %}
     <tr>
       <td class="custom-text">{{ survey.id }}</td>
-      <td class="custom-text">{{ survey.title }}</td>
+      <td><button class="custom-text" onclick="location.href = '/previewsurvey/{{ survey.id }}';">{{survey.title}} </button></td>
       <td class="custom-text">{{ survey.distribution }}</td>
       <td class="custom-text">{{ survey.consentneeded }}</td>
       <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/takesurvey/{{ survey.id }}';">Take Survey</button></td>
@@ -45,7 +45,7 @@
   {% for survey in subjectCompletedSurveys %}
     <tr>
       <td class="custom-text">{{ survey.id }}</td>
-      <td class="custom-text">{{ survey.title }}</td>
+      <td><button class="custom-text" onclick="location.href = '/previewsurvey/{{ survey.id }}';">{{survey.title}} </button></td>
       <td class="custom-text">{{ survey.distribution }}</td>
       <td class="custom-text">{{ survey.consentneeded }}</td>
       <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/viewresponse/{{ survey.id }}';">My Response</button></td>

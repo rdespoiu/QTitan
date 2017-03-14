@@ -349,3 +349,16 @@ def irb_consent_form(request, survey_id):
     context = {'request': request, 'survey': survey}
 
     return renderPage(IRB_CONSENT, context, request)
+
+# Preview Survey                                                                                                                                                
+def preview_survey(request, survey_id):
+
+    survey = Survey.objects.get(id = survey_id)
+
+    if survey.distribution and not hasAccess(request.user, survey):
+        return redirect('index')
+
+    surveyFields = getSurveyFields(survey)
+    context = {'request': request, 'survey': survey, 'surveyFields': surveyFields}
+    
+    return renderPage(PREVIEW_SURVEY, context, request)
