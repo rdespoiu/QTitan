@@ -13,7 +13,7 @@ class RelationGraph:
 	def __init__(self, surveyResults, numOptions):
 		self.surveyResults = surveyResults
 		self.lowerInterval = 3
-		self.midInterval = numOptions - lowerInterval
+		self.midInterval = numOptions - self.lowerInterval
 		self.numOptions = numOptions
 		self.DEBUG = True
 		self.Strongest_Connected_Node = None
