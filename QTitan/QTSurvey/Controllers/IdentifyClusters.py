@@ -151,6 +151,12 @@ class RelationGraph:
 		pool = []
 		for node in self.Nodes:
 			pool.append(node)
+
+		if self.DEBUG: 
+			sys.stdout.write("Pool contains: ")
+			for node in pool:
+				sys.stdout.write("{}, ".format(node))
+			print("")
 		
 		numClusters = 0
 		node = self.Strongest_Connected_Node
@@ -171,6 +177,7 @@ class RelationGraph:
 			if node.cluster is None:
 				if maxNode.cluster is None:
 					numClusters += 1
+					if self.DEBUG: print("Creating new cluster {}, maxCon: {}, initialNode: {}".format(numClusters, maxCon, node))
 					c = Cluster(numClusters, maxCon, node)
 					c.addNode(maxNode)
 					if self.DEBUG: print("Created new cluster: {}".format(c))
@@ -184,6 +191,7 @@ class RelationGraph:
 			if maxNode in pool:
 				pool.remove(maxNode)
 			if pool:
+				if self.DEBUG: print("Getting next node")
 				node = random.choice(pool) #increment the node to another one that hasn't been assigned yet
 
 		if self.DEBUG: 
