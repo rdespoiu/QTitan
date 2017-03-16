@@ -362,8 +362,9 @@ def preview_survey(request, survey_id):
 
     survey = Survey.objects.get(id = survey_id)
 
-    if not hasAccess(request.user, survey):
-        return redirect('index')
+    if (not isResearcher(request) and not hasAccess(request.user, survey)) or \
+       (isResearcher(request) and request.user != survey.ownerID):
+       return redirect('index')
 
     surveyFields = getSurveyFields(survey)
     context = {'request': request, 'survey': survey, 'surveyFields': surveyFields}
