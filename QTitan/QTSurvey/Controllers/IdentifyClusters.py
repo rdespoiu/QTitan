@@ -14,8 +14,9 @@ class RelationGraph:
 		self.optionOrderStart = optionOrderStart
 		self.optionOrderEnd = optionOrderStart + numOptions - 1
 		self.surveyResults = surveyResults
-		self.lowerInterval = 3
-		self.midInterval = numOptions - self.lowerInterval
+		self.interval = 3
+		self.posInterval = self.optionOrderStart + self.interval
+		self.negInterval = self.optionOrderEnd - self.interval
 		self.numOptions = numOptions
 		self.DEBUG = True
 		self.Strongest_Connected_Node = None
@@ -59,7 +60,7 @@ class RelationGraph:
 				if node == otherNode:
 					continue
 				
-				relativeWeight, sameResponses = self.getRelativeWeight(self.lowerInterval, self.numOptions, node, otherNode)
+				relativeWeight, sameResponses = self.getRelativeWeight(self.interval, self.numOptions, node, otherNode)
 				node.addConnection(otherNode, relativeWeight, sameResponses)
 				otherNode.addConnection(node, relativeWeight, sameResponses)
 
@@ -70,11 +71,11 @@ class RelationGraph:
 	#Identify the score of a any response at the given position
 	def getScore(self, pos):
 		ret = 0
-		if pos <= self.lowerInterval:
+		if pos <= self.posInterval:
 			ret = 1
-		elif pos > self.lowerInterval and pos <= self.midInterval:
+		elif pos > self.posInterval and pos <= self.negInterval:
 			ret = 0
-		elif pos > self.midInterval:
+		elif pos > self.negInterval:
 			ret = -1
 		return ret
 	
@@ -109,8 +110,8 @@ class RelationGraph:
 		return Consensus(posWeights, negWeights, ntlWeights, responses)
 
 	def getRelativeWeight(self, interval, numOptions, n1, n2):
-		posInterval = interval
-		negInterval = numOptions - interval
+		posInterval = interval + self.optionOrderStart
+		negInterval = self.optionOrderEnd - interval
 		total = 0
 		sameresponses = []
 		for response in n1.responses:
@@ -143,7 +144,7 @@ class RelationGraph:
 
 	def getClusters(self):
 		#Starting with the strongest connected node, create a cluster
-		c = Cluster(0, self.Strongest_Connection_val, self.Strongest_Connected_Node)
+		c = Cluster(self, 0, self.Strongest_Connection_val, self.Strongest_Connected_Node)
 		self.clusters.append(c)
 		if self.DEBUG: print("Adding first cluster {} to clusters".format(c))
 
@@ -292,7 +293,7 @@ class Node:
 		return minCon, maxCon
 
 class Cluster:
-	def __init__(self, identifier, initialWeight, initialNode):
+	def __init__(self, graph, identifier, initialWeight, initialNode):
 		self.identifier = identifier
 		self.Nodes = []
 		self.Nodes.append(initialNode)
