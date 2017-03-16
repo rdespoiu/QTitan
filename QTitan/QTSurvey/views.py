@@ -352,21 +352,20 @@ def irb_consent_form(request, survey_id):
 def profile_view(request,profile_user):
     if not isAuthenticated(request.user):
         return redirect('index')
-    
+
     profileview = getProfileView(profile_user)
     context = {'request':request, 'profileview': profileview}
     return renderPage(PROFILE_PAGE, context, request)
 
-# Preview Survey                                                                                                                                                
+# Preview Survey
 def preview_survey(request, survey_id):
 
     survey = Survey.objects.get(id = survey_id)
 
-    if survey.distribution and not hasAccess(request.user, survey):
+    if not hasAccess(request.user, survey):
         return redirect('index')
 
     surveyFields = getSurveyFields(survey)
     context = {'request': request, 'survey': survey, 'surveyFields': surveyFields}
-    
-    return renderPage(PREVIEW_SURVEY, context, request)
 
+    return renderPage(PREVIEW_SURVEY, context, request)
