@@ -80,14 +80,29 @@ class RelationGraph:
 
 	#create and return a dictionary containing the total consensus, a sum of the scores for this question of all participants/nodes
 	def getTotalConsensus(self):
-		weights = {}
+		posWeights = {}
+		negWeights = {}
+		ntlWeights = {}
+		responses = []
 		for node in self.Nodes:
 			for response in node.responses:
-				if response.surveyFieldID.value in weights:
-					weights[response.surveyFieldID.value] += self.getScore(response.orderPosition)
+				if response.surveyFieldID.value not in responses:
+					responses.append(response.surveyFieldID.value)
+
+				score = self.getScore(response.orderPosition)
+				if score > 0:
+					weights = posWeights
+				elif score == 0:
+					weights = ntlWeights
 				else:
-					weights[response.surveyFieldID.value] = self.getScore(response.orderPosition)
-		return weights
+					weights = negWeights
+
+				if response.surveyFieldID.value in weights:
+					weights[response.surveyFieldID.value] += 1
+				else:
+					weights[response.surveyFieldID.value] = 1
+
+		return Consensus(posWeights, negWeights, ntlWeights, responses)
 
 	def getRelativeWeight(self, interval, numOptions, n1, n2):
 		posInterval = interval
@@ -303,7 +318,21 @@ class Cluster:
 				else:
 					self.weights[response.surveyFieldID.value] = g.getScore(response.orderPosition)
 
-		  
+class Consensus:
+	def __init__(self, posWeights, negWeights, ntlWeights, names):
+		self.DEBUG = True
+		self.posWeights = posWeights
+		self.negWeights = negWeights
+		self.ntlWeights = ntlWeights
+		self.names = names
+
+		for response in self.names:
+			if response not in self.posWeights:
+				self.posWeights[response] = 0
+			if response not in self.negWeights:
+				self.negWeights[response] = 0
+			if response not in self.ntlWeights:
+				self.ntlWeights[response] = 0
 
 
 

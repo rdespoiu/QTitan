@@ -3,6 +3,7 @@
 {% load static %}
 
 {% load chartit %}
+{% load qtsurvey_filters %}
 {{ poschart|load_charts:"poschart" }}
 
 {% block researcher_survey_analytics %}
@@ -34,18 +35,24 @@
 								text: '{{ survey.title }} Consensus'
 						},
 						xAxis: {
-								categories: ['Response Option Consensus']
+								categories: [{% for response in totalConsensus.names %} '{{response}}', {%endfor%}]
 						},
 						credits: {
 								enabled: false
 						},
 						series: [ 
-						{% for key, value in totalConsensus %}
 							{
-							name: '{{ key }}',
-							data: [{{ value }}]
+							name: 'Positive Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.posWeights|get_item:response }}, {% endfor %}]
 							},
-						{% endfor %}]
+							{
+							name: 'Negative Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.negWeights|get_item:response }}, {% endfor %}]
+							},
+							{
+							name: 'Neutral Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.ntlWeights|get_item:response }}, {%endfor %}]
+							}]
 				});
 		</script>
 	</div>
