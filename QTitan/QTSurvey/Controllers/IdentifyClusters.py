@@ -18,6 +18,7 @@ class RelationGraph:
 		self.DEBUG = True
 		self.Strongest_Connected_Node = None
 		self.Strongest_Connection_val = -1
+		self.clusters = []
 
 		#generate a node for each participant and their results
 		self.Nodes = []
@@ -113,9 +114,9 @@ class RelationGraph:
 
 	def getClusters(self):
 		#Starting with the strongest connected node, create a cluster
-		c = Cluster(0, self.Strongest_Connected_val, self.Strongest_Connected_Node)
-		self.Strongest_Connected_Node.cluster = c
+		c = Cluster(0, self.Strongest_Connection_val, self.Strongest_Connected_Node)
 		self.clusters.append(c)
+		if self.DEBUG: print("Adding first cluster {} to clusters".format(c))
 
 		pool = []
 		for node in self.Nodes:
@@ -142,13 +143,25 @@ class RelationGraph:
 					numClusters += 1
 					c = Cluster(numClusters, maxCon, node)
 					c.addNode(maxNode)
+					if self.DEBUG: print("Created new cluster: {}".format(c))
 					self.clusters.append(c)
 				else:
 					maxNode.cluster.addNode(node)
 			else:
 				node.cluster.addNode(maxNode)
+			
+			pool.remove(node)
+			if maxNode in pool:
+				pool.remove(maxNode)
+			if pool:
+				node = random.choice(pool) #increment the node to another one that hasn't been assigned yet
 
-			node = random.choice(pool) #increment the node to another one that hasn't been assigned yet
+		if self.DEBUG: 
+			print("Pool empty. number of clusters in list: {}".format(len(self.clusters)))
+			for cluster in self.clusters:
+				print(cluster)
+
+		return self.clusters
 		
 
 	def getClustersOld(self):
@@ -254,6 +267,7 @@ class Cluster:
 		self.Nodes.append(initialNode)
 		self.startWeight = initialWeight
 		self.name = "Cluster " + str(self.identifier)
+		initialNode.cluster = self
 
 	def __str__(self):
 		return self.name
@@ -307,8 +321,9 @@ def identifyClusters(survey):
 	graph = RelationGraph(surveyResults, numOptions)
 	clusters = graph.getClusters()
 
-	for c in clusters:
-		c.consensus(graph)
+	if clusters is not None:
+		for c in clusters:
+			c.consensus(graph)
 
 	return graph, clusters
 
