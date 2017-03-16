@@ -10,7 +10,9 @@ from .GetSurveyFields import getSurveyFields
 
 ############# RelationGraph class ###########
 class RelationGraph:
-	def __init__(self, surveyResults, numOptions):
+	def __init__(self, surveyResults, numOptions, optionOrderStart):
+		self.optionOrderStart = optionOrderStart
+		self.optionOrderEnd = optionOrderStart + numOptions - 1
 		self.surveyResults = surveyResults
 		self.lowerInterval = 3
 		self.midInterval = numOptions - self.lowerInterval
@@ -19,6 +21,8 @@ class RelationGraph:
 		self.Strongest_Connected_Node = None
 		self.Strongest_Connection_val = -1
 		self.clusters = []
+
+		if self.DEBUG: print("Options start at: {}, there are {} options, options end at: {}".format(optionOrderStart, numOptions, self.optionOrderEnd))
 
 		#generate a node for each participant and their results
 		self.Nodes = []
@@ -375,8 +379,12 @@ def identifyClusters(survey):
 	surveyResults = getAnalyticsData(survey)
 	fields = getSurveyFields(survey)
 	numOptions = len(fields)
+
+	minOrder = sys.maxsize
+	for response in next(iter(surveyResults.values())):
+		minOrder = min(minOrder, response.orderPosition)
 	
-	graph = RelationGraph(surveyResults, numOptions)
+	graph = RelationGraph(surveyResults, numOptions, minOrder)
 	clusters = graph.getClusters()
 
 	if clusters is not None:
@@ -434,6 +442,8 @@ def identifyClustersOld(survey):
 	
 	kmeans = KMeans(n_clusters=2, random_state=0).fit(responseMatrix)
 	'''
+	
+
 	fields = getSurveyFields(survey)
 	numOptions = len(fields)
 	G = RelationGraph(surveyResults, numOptions)
