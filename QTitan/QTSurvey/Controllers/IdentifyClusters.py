@@ -139,7 +139,7 @@ class RelationGraph:
 				continue
 
 			#add to the total if the responses are within interval - 1 of each other
-			if abs(response.orderPosition - n2pos) < interval:
+			if abs(orderPos - n2pos) < interval:
 				if self.DEBUG: print("n1: {}, n2: {}, r: {}, o1: {}, o2: {}, sub: {}, i: {}".format(n1, n2, response.surveyFieldID.value, orderPos, n2pos, abs(orderPos - n2pos), interval))
 				sameresponses.append(response.surveyFieldID.value)
 				total += 1
