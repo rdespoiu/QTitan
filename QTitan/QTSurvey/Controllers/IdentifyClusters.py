@@ -11,20 +11,18 @@ from .GetSurveyFields import getSurveyFields
 
 ############# RelationGraph class ###########
 class RelationGraph:
-	def __init__(self, interval, surveyResults, numOptions, optionOrderStart):
-		self.optionOrderStart = optionOrderStart
-		self.optionOrderEnd = optionOrderStart + numOptions - 1
+	def __init__(self, interval, surveyResults, numOptions):
 		self.surveyResults = surveyResults
 		self.interval = interval
-		self.posInterval = self.optionOrderStart + self.interval
-		self.negInterval = self.optionOrderEnd - self.interval
+		self.posInterval = self.interval
+		self.negInterval = numOptions - self.interval
 		self.numOptions = numOptions
 		self.DEBUG = True
 		self.Strongest_Connected_Node = None
 		self.Strongest_Connection_val = -1
 		self.clusters = []
 
-		if self.DEBUG: print("Options start at: {}, there are {} options, options end at: {}".format(optionOrderStart, numOptions, self.optionOrderEnd))
+		if self.DEBUG: print("Options start at: {}, there are {} options, options end at: {}".format(interval, numOptions, numOptions))
 
 		#generate a node for each participant and their results
 		self.Nodes = []
@@ -100,7 +98,7 @@ class RelationGraph:
 				if response.surveyFieldID.value not in responses:
 					responses.append(response.surveyFieldID.value)
 
-				score = self.getScore(response.orderPosition)
+				score = self.getScore(node.getRelativePosition(response.orderPosition))
 				if score > 0:
 					weights = posWeights
 				elif score == 0:
@@ -116,13 +114,15 @@ class RelationGraph:
 		return Consensus(posWeights, negWeights, ntlWeights, responses)
 
 	def getRelativeWeight(self, interval, numOptions, n1, n2):
-		posInterval = interval + self.optionOrderStart
-		negInterval = self.optionOrderEnd - interval
+		posInterval = interval
+		negInterval = numOptions - interval
 		total = 0
 		sameresponses = []
 		for response in n1.responses:
-						# exit early if the response isn't significant
-			if response.orderPosition > posInterval and response.orderPosition <= negInterval:
+			# exit early if the response isn't significant
+			orderPos = n1.getRelativePosition(response.orderPosition)
+
+			if orderPos > posInterval and orderPos <= negInterval:
 				continue
 
 			# find the same response value in n2
@@ -130,7 +130,7 @@ class RelationGraph:
 			response2 = None
 			for r2 in n2.responses:
 				if response.surveyFieldID.value == r2.surveyFieldID.value:
-					n2pos = r2.orderPosition
+					n2pos = n2.getRelativePosition(r2.orderPosition)
 					response2 = r2
 					break
 			
@@ -139,8 +139,8 @@ class RelationGraph:
 				continue
 
 			#add to the total if the responses are within interval - 1 of each other
-			if abs(response.orderPosition - n2pos) < interval:
-				if self.DEBUG: print("n1: {}, n2: {}, r: {}, o1: {}, o2: {}, sub: {}, i: {}".format(n1, n2, response.surveyFieldID.value, response.orderPosition, n2pos, abs(response.orderPosition - n2pos), interval))
+			if abs(orderPos - n2pos) < interval:
+				if self.DEBUG: print("n1: {}, n2: {}, r: {}, o1: {}, o2: {}, sub: {}, i: {}".format(n1, n2, response.surveyFieldID.value, orderPos, n2pos, abs(orderPos - n2pos), interval))
 				sameresponses.append(response.surveyFieldID.value)
 				total += 1
 			#else: #otherwise, they are opposing viewpoints, so the relative weight loses one
@@ -287,6 +287,11 @@ class Node:
 		self.cluster = None
 		self.sameresponses = {}
 		self.baseDemographic = BaseDemographic.objects.get(userID = participant.id)
+		
+		self.minOrder = sys.maxsize
+		for response in responses:
+			if response.orderPosition < self.minOrder:
+				self.minOrder = response.orderPosition
 	
 	def __str__(self):
 		return self.participant.username
@@ -300,7 +305,9 @@ class Node:
 		else:
 			self.connections[node] = magnitude
 			self.sameresponses[node] = sameresponses
-
+	
+	def getRelativePosition(self, pos):
+		return pos - self.minOrder + 1
 
 	def getConnectionRange(self):
 		maxCon = max(self.connections.values())
@@ -342,7 +349,7 @@ class Cluster:
 				if response.surveyFieldID.value not in responses:
 					responses.append(response.surveyFieldID.value)
 				
-				score = g.getScore(response.orderPosition)
+				score = g.getScore(node.getRelativePosition(response.orderPosition))
 				if score > 0:
 					weights = posWeights
 				elif score == 0:
@@ -401,10 +408,6 @@ def identifyClusters(survey):
 	if len(surveyResults.values()) == 0:
 		return None, None
 
-	minOrder = sys.maxsize
-	for response in next(iter(surveyResults.values())):
-		minOrder = min(minOrder, response.orderPosition)
-	
 	if numOptions < 4:
 		interval = 1
 	elif numOptions < 9:
@@ -412,7 +415,7 @@ def identifyClusters(survey):
 	else:
 		interval = 3
 
-	graph = RelationGraph(interval, surveyResults, numOptions, minOrder)
+	graph = RelationGraph(interval, surveyResults, numOptions)
 	clusters = graph.getClusters()
 
 	if clusters is not None:
