@@ -19,6 +19,7 @@ from .RenderPage import renderPage
 from .CSVExport import resultsToCSV
 from .ViewProfile import getProfileView
 from .GetAnalyticsData import getAnalyticsData
+from .IdentifyClusters import identifyClusters
 
 
 # Forms
