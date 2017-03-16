@@ -72,11 +72,11 @@ class RelationGraph:
 	#Identify the score of a any response at the given position
 	def getScore(self, pos):
 		ret = 0
-		if pos <= self.posInterval:
+		if pos < self.posInterval:
 			ret = 1
-		elif pos > self.posInterval and pos <= self.negInterval:
+		elif pos >= self.posInterval and pos < self.negInterval:
 			ret = 0
-		elif pos > self.negInterval:
+		elif pos >= self.negInterval:
 			ret = -1
 		return ret
 	
