@@ -42,17 +42,18 @@
 						},
 						series: [ 
 							{
+							name: 'Neutral Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.ntlWeights|get_item:response }}, {%endfor %}]
+							},
+							{
 							name: 'Positive Responses',
 							data: [{% for response in totalConsensus.names %} {{ totalConsensus.posWeights|get_item:response }}, {% endfor %}]
 							},
 							{
 							name: 'Negative Responses',
 							data: [{% for response in totalConsensus.names %} {{ totalConsensus.negWeights|get_item:response }}, {% endfor %}]
-							},
-							{
-							name: 'Neutral Responses',
-							data: [{% for response in totalConsensus.names %} {{ totalConsensus.ntlWeights|get_item:response }}, {%endfor %}]
-							}]
+							}
+							]
 				});
 		</script>
 	</div>
@@ -71,30 +72,37 @@
 
 				<script type="text/javascript">
 	
-								// Apply the theme
-								Highcharts.setOptions(Highcharts.theme);
+				// Apply the theme
+				Highcharts.setOptions(Highcharts.theme);
 
-								Highcharts.chart('{{ cluster.name }}-chart', {
-										chart: {
-												type: 'column'
-										},
-										title: {
-												text: '{{ cluster.name }} Consensus'
-										},
-										xAxis: {
-												categories: ['Response Option Consensus']
-										},
-										credits: {
-												enabled: false
-										},
-										series: [ 
-										{% for key, value in cluster.weights.items %}
-											{
-											name: '{{ key }}',
-											data: [{{ value }}]
-											},
-										{% endfor %}]
-								});
+				Highcharts.chart('{{ cluster.name }}-chart', {
+						chart: {
+								type: 'column'
+						},
+						title: {
+								text: '{{ cluster.name }} Consensus'
+						},
+						xAxis: {
+								categories: [{% for response in cluster.weights.names %} '{{response}}', {%endfor%}]
+						},
+						credits: {
+								enabled: false
+						},
+						series: [ 
+							{
+							name: 'Neutral Responses',
+							data: [{% for response in totalConsensus.names %} {{ cluster.weights.ntlWeights|get_item:response }}, {%endfor %}]
+							},
+							{
+							name: 'Positive Responses',
+							data: [{% for response in totalConsensus.names %} {{ cluster.weights.posWeights|get_item:response }}, {% endfor %}]
+							},
+							{
+							name: 'Negative Responses',
+							data: [{% for response in totalConsensus.names %} {{ cluster.weights.negWeights|get_item:response }}, {% endfor %}]
+							}
+							]
+				});
 				
 				</script>
 			</div>

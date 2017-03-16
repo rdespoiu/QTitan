@@ -310,13 +310,30 @@ class Cluster:
 			return False
 
 	def consensus(self, g):
-		self.weights = {}
+		posWeights = {}
+		negWeights = {}
+		ntlWeights = {}
+		responses = []
+
 		for node in self.Nodes:
 			for response in node.responses:
-				if response.surveyFieldID.value in self.weights:
-					self.weights[response.surveyFieldID.value] += g.getScore(response.orderPosition)
+				if response.surveyFieldID.value not in responses:
+					responses.append(response.surveyFieldID.value)
+				
+				score = g.getScore(response.orderPosition)
+				if score > 0:
+					weights = posWeights
+				elif score == 0:
+					weights = ntlWeights
 				else:
-					self.weights[response.surveyFieldID.value] = g.getScore(response.orderPosition)
+					weights = negWeights
+
+				if response.surveyFieldID.value in weights:
+					weights[response.surveyFieldID.value] += 1
+				else:
+					weights[response.surveyFieldID.value] = 1
+		
+		self.weights = Consensus(posWeights, negWeights, ntlWeights, responses)
 
 class Consensus:
 	def __init__(self, posWeights, negWeights, ntlWeights, names):
