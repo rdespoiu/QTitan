@@ -100,8 +100,8 @@ class RelationGraph:
 			#add to the total if the responses are within interval - 1 of each other
 			if abs(response.orderPosition - n2pos) < interval:
 				total += 1
-			else: #otherwise, they are opposing viewpoints, so the relative weight loses one
-				total -= 1
+			#else: #otherwise, they are opposing viewpoints, so the relative weight loses one
+				#total -= 1
 		
 		return total
 
