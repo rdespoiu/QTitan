@@ -98,7 +98,8 @@ td#clickable{
   text-align: center;
   padding-top: 10px;
   padding-bottom: 10px;
-    
+cursor: -webkit-grab;
+        
 }
 
 .take-survey-box ul li:focus {
@@ -242,7 +243,8 @@ td#clickable{
 
 .registration-box form input {
   background-color: #212121;
-  opacity: 0.8;
+  opacity: 1;
+  color: #ffffff;
 }
 
 .registration-box form input:focus {
@@ -253,7 +255,7 @@ td#clickable{
 
 .registration-box form a {
   opacity: 0.6;
-  color: white;
+  color: #ffffff;
   font-size: 1.5em;
 }
 
