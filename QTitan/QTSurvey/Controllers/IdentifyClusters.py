@@ -35,6 +35,11 @@ class RelationGraph:
 		for node in self.Nodes:
 			self.Connect(node)
 
+		# if there weren't any node to connect to, set us to the only node
+		if self.Strongest_Connected_Node is None:
+			self.Strongest_Connected_Node = self.Nodes[0]
+			self.Strongest_Connection_val = 0
+
 		if self.DEBUG:
 			self.printNodes()
 	
@@ -315,6 +320,8 @@ class Cluster:
 		return self.name
 
 	def addNode(self, node):
+		if node is None:
+			return False
 		if not node in self.Nodes:
 			self.Nodes.append(node)
 			if node.cluster is not None:
