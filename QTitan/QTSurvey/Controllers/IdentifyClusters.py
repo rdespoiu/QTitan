@@ -391,6 +391,9 @@ def identifyClusters(survey):
 	fields = getSurveyFields(survey)
 	numOptions = len(fields)
 
+	if len(surveyResults.values()) == 0:
+		return None, None
+
 	minOrder = sys.maxsize
 	for response in next(iter(surveyResults.values())):
 		minOrder = min(minOrder, response.orderPosition)

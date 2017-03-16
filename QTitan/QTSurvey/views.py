@@ -170,8 +170,11 @@ def researcher_survey_analytics(request, survey_id):
 	survey = getSurvey(survey_id)
 	g, clusters = identifyClusters(survey_id)
 
-
-	context = {'request': request, 'survey': survey, 'g': g, 'clusters': clusters, 'totalConsensus': g.getTotalConsensus()}
+	if g is None:
+		totalConsensus = None
+	else:
+		totalConsensus = g.getTotalConsensus()
+	context = {'request': request, 'survey': survey, 'g': g, 'clusters': clusters, 'totalConsensus': totalConsensus}
 
 	return renderPage(RESEARCHER_SURVEY_ANALYTICS, context, request)
 
