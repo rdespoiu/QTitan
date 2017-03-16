@@ -1,4 +1,5 @@
 from sklearn.cluster import KMeans
+from ..models import *
 import numpy as np
 import math
 import random
@@ -272,6 +273,7 @@ class Node:
 		self.participant = participant
 		self.cluster = None
 		self.sameresponses = {}
+		self.baseDemographic = BaseDemographic.objects.get(userID = participant.id)
 	
 	def __str__(self):
 		return self.participant.username
