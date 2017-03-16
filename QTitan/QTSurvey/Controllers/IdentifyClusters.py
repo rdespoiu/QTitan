@@ -119,8 +119,10 @@ class RelationGraph:
 		total = 0
 		sameresponses = []
 		for response in n1.responses:
-						# exit early if the response isn't significant
-			if response.orderPosition > posInterval and response.orderPosition <= negInterval:
+			# exit early if the response isn't significant
+			orderPos = n1.getRelativePosition(response.orderPosition)
+
+			if orderPos > posInterval and orderPos <= negInterval:
 				continue
 
 			# find the same response value in n2
@@ -128,7 +130,7 @@ class RelationGraph:
 			response2 = None
 			for r2 in n2.responses:
 				if response.surveyFieldID.value == r2.surveyFieldID.value:
-					n2pos = r2.orderPosition
+					n2pos = n2.getRelativePosition(r2.orderPosition)
 					response2 = r2
 					break
 			
@@ -138,7 +140,7 @@ class RelationGraph:
 
 			#add to the total if the responses are within interval - 1 of each other
 			if abs(response.orderPosition - n2pos) < interval:
-				if self.DEBUG: print("n1: {}, n2: {}, r: {}, o1: {}, o2: {}, sub: {}, i: {}".format(n1, n2, response.surveyFieldID.value, response.orderPosition, n2pos, abs(response.orderPosition - n2pos), interval))
+				if self.DEBUG: print("n1: {}, n2: {}, r: {}, o1: {}, o2: {}, sub: {}, i: {}".format(n1, n2, response.surveyFieldID.value, orderPos, n2pos, abs(orderPos - n2pos), interval))
 				sameresponses.append(response.surveyFieldID.value)
 				total += 1
 			#else: #otherwise, they are opposing viewpoints, so the relative weight loses one
