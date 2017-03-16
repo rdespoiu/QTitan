@@ -18,6 +18,7 @@
 
 <script>
 $("#deleteBtn").click(function(e) {
+  console.log('Attempting to delete a survey');
   if (!confirm("Are you sure you'd like to delete this survey?")) e.preventDefault();
 });
 </script>
