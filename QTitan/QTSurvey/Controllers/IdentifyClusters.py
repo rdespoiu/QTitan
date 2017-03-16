@@ -10,11 +10,11 @@ from .GetSurveyFields import getSurveyFields
 
 ############# RelationGraph class ###########
 class RelationGraph:
-	def __init__(self, surveyResults, numOptions, optionOrderStart):
+	def __init__(self, interval, surveyResults, numOptions, optionOrderStart):
 		self.optionOrderStart = optionOrderStart
 		self.optionOrderEnd = optionOrderStart + numOptions - 1
 		self.surveyResults = surveyResults
-		self.interval = 3
+		self.interval = interval
 		self.posInterval = self.optionOrderStart + self.interval
 		self.negInterval = self.optionOrderEnd - self.interval
 		self.numOptions = numOptions
@@ -385,7 +385,14 @@ def identifyClusters(survey):
 	for response in next(iter(surveyResults.values())):
 		minOrder = min(minOrder, response.orderPosition)
 	
-	graph = RelationGraph(surveyResults, numOptions, minOrder)
+	if numOptions < 4:
+		interval = 1
+	elif numOptions < 9:
+		interval = 2
+	else:
+		interval = 3
+
+	graph = RelationGraph(interval, surveyResults, numOptions, minOrder)
 	clusters = graph.getClusters()
 
 	if clusters is not None:
