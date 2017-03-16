@@ -28,10 +28,6 @@ html {
   margin-top: 2%;
 }
 
-td#clickable{
-	cursor: pointer;
-}
-
 .navigation-link a {
   color: white;
   font-size: 1.8em;
