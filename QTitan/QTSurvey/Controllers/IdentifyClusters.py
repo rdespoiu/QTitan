@@ -179,7 +179,7 @@ class RelationGraph:
 				if maxNode.cluster is None:
 					numClusters += 1
 					if self.DEBUG: print("Creating new cluster {}, maxCon: {}, initialNode: {}".format(numClusters, maxCon, node))
-					c = Cluster(numClusters, maxCon, node)
+					c = Cluster(self, numClusters, maxCon, node)
 					c.addNode(maxNode)
 					if self.DEBUG: print("Created new cluster: {}".format(c))
 					self.clusters.append(c)
