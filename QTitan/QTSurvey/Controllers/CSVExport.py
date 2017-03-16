@@ -69,7 +69,11 @@ def writeToFile(survey, csvData):
     filename = cleanString('{}_{}_{}_{}.csv'.format(survey.ownerID.username, survey.id, survey.title, date.today()))
 
     # Create (or replace) file
-    f = open('QTSurvey/SurveyResultCSV/{}'.format(filename), 'w')
+    # HOTFIX: Return None if there's a FileNotFoundError
+    try:
+        f = open('QTSurvey/SurveyResultCSV/{}'.format(filename), 'w')
+    except FileNotFoundError:
+        return None
 
     # Write Survey Header and Details
     f.write('{}\n'.format(csvData['SurveyHeader']))

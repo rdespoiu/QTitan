@@ -8,8 +8,8 @@
   <form action="" method="POST" name="form-createsurvey">
     {% csrf_token  %}
     <p id="form-errors"></p>
-    <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="consentneeded" value="consentneeded" name="consentneeded">IRB consent form required</label><br>
-    <label class="checkbox-inline"><input type="checkbox" class="form-control create-survey-form" id="distribution" value="distribution" name="distribution">Invitation only survey</label>
+    <label class="checkbox-inline"><input type="checkbox" style="width: 20px; height: 15px; padding: 1px;" class="form-control create-survey-form" id="consentneeded" value="consentneeded" name="consentneeded">IRB consent form required</label><br>
+    <label class="checkbox-inline"><input type="checkbox" style=" background: red; width: 20px; height: 15px; padding: 1px;" class="form-control create-survey-form" id="distribution" value="distribution" name="distribution">Invitation only survey</label>
     <input type="text" class="form-control create-survey-form" id="title" placeholder="survey title" name="title" autocomplete="off">
     <input type="text" class="form-control create-survey-form" id="description" placeholder="survey description" name="description" autocomplete="off"></input><br>
 
