@@ -51,4 +51,28 @@
       <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/viewresponse/{{ survey.id }}';">My Response</button></td>
     </tr>
   {% endfor %}
+{% elif page == "profile_view" %}
+  <hr>
+  <center><h1>User Info</h1></center>
+  <hr>
+  <center>
+  {% for profilev in profileview|slice:":1" %}
+    <ul  style="list-style-type:none">
+      <li class="custom-text"><h2>ID :   {{ profilev.id }} </h2></td>
+      <li class="custom-text"><h2>Username:   {{ profilev.username }} </h2></td>
+      <li class="custom-text"><h2>Firs Name:   {{ profilev.first_name }} </h2></li>
+      <li class="custom-text"><h2>Last Name:   {{ profilev.last_name }} </h2></li>
+      <li class="custom-text"><h2>Email:   {{ profilev.email }} </h2></li>
+      <li class="custom-text"><h2>DOB:   {{ profilev.dob }} </h2></li>
+      <li class="custom-text"><h2>Age:   {{ profilev.age }} </h2></li>
+      <li class="custom-text"><h2>Phone:   {{ profilev.phone }} </h2></li>
+      
+   {% endfor %}
+   {%for profile in profileview %}
+      {% if profile.value != Null %}
+      	<li class="custom-text"><h2>{{ profile.value }} :   {{ profile.response }} </h2></li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+    </center>
 {% endif %}
