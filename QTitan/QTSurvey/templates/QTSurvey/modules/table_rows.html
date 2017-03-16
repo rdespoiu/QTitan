@@ -10,7 +10,7 @@
       <td><button class="btn btn-primary btn-block custom-button" onclick="location.href = '/surveyanalytics/{{ survey.id }}';">Run Analytics</button></td>
       <td><form method="POST" action="{% url "delete_survey" pk=survey.pk%}">
 	  {% csrf_token %}
-	  <input class="btn btn-primary btn-block custom-button" type="submit" value="Delete">
+	  <input id="deleteBtn" class="btn btn-primary btn-block custom-button" type="submit" value="Delete">
       </form></td>
 </tr>
   {% endfor %}
@@ -66,7 +66,7 @@
       <li class="custom-text"><h2>DOB:   {{ profilev.dob }} </h2></li>
       <li class="custom-text"><h2>Age:   {{ profilev.age }} </h2></li>
       <li class="custom-text"><h2>Phone:   {{ profilev.phone }} </h2></li>
-      
+
    {% endfor %}
    {%for profile in profileview %}
       {% if profile.value != Null %}
@@ -76,3 +76,11 @@
     </ul>
     </center>
 {% endif %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script>
+$("#deleteBtn").click(function(e) {
+  if (!confirm("Are you sure you'd like to delete this survey?")) e.preventDefault();
+});
+</script>
