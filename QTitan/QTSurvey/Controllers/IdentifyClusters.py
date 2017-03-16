@@ -14,6 +14,8 @@ class RelationGraph:
 		self.surveyResults = surveyResults
 		self.lowerInterval = 3
 		self.midInterval = numOptions - 3
+		self.numOptions = numOptions
+		self.DEBUG = True
 
 		#generate a node for each participant and their results
 		self.Nodes = []
@@ -23,6 +25,9 @@ class RelationGraph:
 		#analyze each node for relationships
 		for node in self.Nodes:
 			self.Connect(node)
+
+		if self.DEBUG:
+			self.printNodes()
 	
 	def printNodes(self):
 		for node in self.Nodes:
@@ -37,34 +42,30 @@ class RelationGraph:
 	def Connect(self, node):
 		#for all of this node's responses
 		for response in node.responses:
-			score = self.getScore(response.orderPosition)
 			# connect to the other nodes in this graph
 			for otherNode in self.Nodes:
 				if node == otherNode:
 					continue
 				
-				#find the score for this response option in the other node
-				for otherResponse in otherNode.responses:
-					if otherResponse.surveyFieldID.value == response.surveyFieldID.value:
-						otherScore = self.getScore(otherResponse.orderPosition)
-						break
-				
-				#if the intervals are the same
-				if score == otherScore:
-					node.addConnection(otherNode, score)
-					otherNode.addConnection(node, score)
+				relativeWeight = self.getRelativeWeight(self.lowerInterval, self.numOptions, node, otherNode)
+				node.addConnection(otherNode, relativeWeight)
+				otherNode.addConnection(node, relativeWeight)
 	
 	#Identify the score of a any response at the given position
 	def getScore(self, pos):
 		ret = 0
 		if pos <= self.lowerInterval:
-			ret = 3
+			ret = 1
 		elif pos > self.lowerInterval and pos <= self.midInterval:
 			ret = 0
 		elif pos > self.midInterval:
-			ret = -3
+			ret = -1
 		return ret
 	
+	def getAbsScore(self, pos):
+		rawScore = self.getScore(pos)
+		return abs(rawScore)
+
 	#create and return a dictionary containing the total consensus, a sum of the scores for this question of all participants/nodes
 	def getTotalConsensus(self):
 		weights = {}
@@ -75,6 +76,35 @@ class RelationGraph:
 				else:
 					weights[response.surveyFieldID.value] = self.getScore(response.orderPosition)
 		return weights
+
+	def getRelativeWeight(self, interval, numOptions, n1, n2):
+		posInterval = interval
+		negInterval = numOptions - interval
+		total = 0
+		for response in n1.responses:
+						# exit early if the response isn't significant
+			if response.orderPosition > posInterval and response.orderPosition < negInterval:
+				continue
+
+			# find the same response value in n2
+			n2pos = -1
+			for r2 in n2.responses:
+				if response.surveyFieldID.value == r2.surveyFieldID.value:
+					n2pos = r2.orderPosition
+					break
+			
+			#break early if n2's response position isn't significant
+			if n2pos > posInterval and n2pos < negInterval:
+				continue
+
+			#add to the total if the responses are within interval - 1 of each other
+			if abs(response.orderPosition - n2pos) < interval:
+				total += 1
+			else: #otherwise, they are opposing viewpoints, so the relative weight loses one
+				total -= 1
+		
+		return total
+
 	
 	def getClusters(self):
 		self.clusters = []
@@ -105,7 +135,7 @@ class RelationGraph:
 			if currentWeight in node.connections.values():
 				c = Cluster(cnum, currentWeight, node)
 				cnum += 1
-				print(c)
+				#if self.DEBUG: print(c)
 				maxWeight = currentWeight + maxScore
 				minWeight = currentWeight - maxScore
 				
@@ -128,7 +158,14 @@ class RelationGraph:
 	#recursively add this 'node' to 'cluster' if the connection between it and its 'parent' is between maxWeight and minWeight, inclusive
 	# because it is recursive, it'll also add similar relationships this node has with other nodes it is connected to.
 	def assignToCluster(self, maxWeight, minWeight, pool, cluster, node, parent):
-		if parent != node and parent.connections[node] >= minWeight and parent.connections[node] <= maxWeight:
+		relativeWeight = self.getRelativeWeight(self.lowerInterval, self.numOptions, parent, node)
+		if self.DEBUG:
+			sys.stdout.write("n: {}, p: {}, min: {}, max: {}, rel: {}\n".format(node.participant.username, parent.participant.username, minWeight, maxWeight, relativeWeight))
+		
+		if parent != node and relativeWeight >= minWeight and relativeWeight <= maxWeight:
+			if self.DEBUG:
+				sys.stdout.write("Adding node {} to {}\n".format(node, cluster))
+			
 			added = cluster.addNode(node)
 			pool.remove(node)
 			
@@ -136,6 +173,7 @@ class RelationGraph:
 				for n in node.connections:
 					if n in pool:
 						self.assignToCluster(maxWeight, minWeight, pool, cluster, n, node)
+			
 		
 
 ########## Node Class ##########################
@@ -144,14 +182,19 @@ class Node:
 		self.connections = {}
 		self.responses = responses
 		self.participant = participant
+	
+	def __str__(self):
+		return self.participant.username
 
 	#Adds a connection between this node and the incoming node.
 	def addConnection(self, node, magnitude):
-		key = node
-		if key in self.connections:
-			self.connections[key] += magnitude
+		if node in self.connections:
+			if self.connections[node] != magnitude:
+				print("Same connection has differing magnitude?")
+			return
 		else:
-			self.connections[key] = magnitude
+			self.connections[node] = magnitude
+
 
 	def getConnectionRange(self):
 		maxCon = max(self.connections.values())
