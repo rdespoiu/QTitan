@@ -13,9 +13,11 @@ class RelationGraph:
 	def __init__(self, surveyResults, numOptions):
 		self.surveyResults = surveyResults
 		self.lowerInterval = 3
-		self.midInterval = numOptions - 3
+		self.midInterval = numOptions - lowerInterval
 		self.numOptions = numOptions
 		self.DEBUG = True
+		self.Strongest_Connected_Node = None
+		self.Strongest_Connection_val = -1
 
 		#generate a node for each participant and their results
 		self.Nodes = []
@@ -50,6 +52,10 @@ class RelationGraph:
 				relativeWeight = self.getRelativeWeight(self.lowerInterval, self.numOptions, node, otherNode)
 				node.addConnection(otherNode, relativeWeight)
 				otherNode.addConnection(node, relativeWeight)
+
+				if relativeWeight > self.Strongest_Connection_val:
+					self.Strongest_Connection_val = relativeWeight
+					self.Strongest_Connected_Node = node
 	
 	#Identify the score of a any response at the given position
 	def getScore(self, pos):
@@ -105,8 +111,47 @@ class RelationGraph:
 		
 		return total
 
-	
 	def getClusters(self):
+		#Starting with the strongest connected node, create a cluster
+		c = Cluster(0, self.Strongest_Connected_val, self.Strongest_Connected_Node)
+		self.Strongest_Connected_Node.cluster = c
+		self.clusters.append(c)
+
+		pool = []
+		for node in self.Nodes:
+			pool.append(node)
+		
+		numClusters = 0
+		node = self.Strongest_Connected_Node
+		while pool:
+			#add this node's strongest connected otherNode to this node's cluster
+			#find the strongest connected node
+			maxNode = None
+			maxCon = -1
+			for otherNode in node.connections:
+				if node.connections[otherNode] > maxCon:
+					maxNode = otherNode
+					maxCon = node.connections[otherNode]
+
+			# if this node doesn't have a cluster, check the maxNode
+				#if the maxNode doesn't have a cluster, then create a new cluster for the pair
+				#if the maxNode does have a cluster, add this node to it
+			# if the node does have a cluster, add the maxnode to it
+			if node.cluster is None:
+				if maxNode.cluster is None:
+					numClusters += 1
+					c = Cluster(numClusters, maxCon, node)
+					c.addNode(maxNode)
+					self.clusters.append(c)
+				else:
+					maxNode.cluster.addNode(node)
+			else:
+				node.cluster.addNode(maxNode)
+
+			node = random.choice(pool) #increment the node to another one that hasn't been assigned yet
+		
+
+	def getClustersOld(self):
 		self.clusters = []
 		maxScore = self.getScore(0) # the score of the first option will always be the highest
 
@@ -182,6 +227,7 @@ class Node:
 		self.connections = {}
 		self.responses = responses
 		self.participant = participant
+		self.cluster = None
 	
 	def __str__(self):
 		return self.participant.username
@@ -215,6 +261,9 @@ class Cluster:
 	def addNode(self, node):
 		if not node in self.Nodes:
 			self.Nodes.append(node)
+			if node.cluster is not None:
+				print("Error, node has been assigned to more than one cluster")
+			node.cluster = self
 			return True
 		else:
 			return False
