@@ -168,15 +168,13 @@ def researcher_survey_analytics(request, survey_id):
 		return redirect('index')
 
 	survey = getSurvey(survey_id)
-	surveyParticipants = getSurveyTakers(survey)
-	participantResults = {}
+	g, clusters = identifyClusters(survey_id)
 
-	for participant in surveyParticipants:
-		participantResults[participant] = (getSurveyResponse(participant, survey))
-		participantResults[participant] = {'surveyResponse': getSurveyResponse(participant, survey), 'surveyDemographics': getCustomDemographicResponse(participant, survey)}
-
-
-	context = {'request': request, 'survey': survey, 'participantResults': participantResults}
+	if g is None:
+		totalConsensus = None
+	else:
+		totalConsensus = g.getTotalConsensus()
+	context = {'request': request, 'survey': survey, 'g': g, 'clusters': clusters, 'totalConsensus': totalConsensus}
 
 	return renderPage(RESEARCHER_SURVEY_ANALYTICS, context, request)
 

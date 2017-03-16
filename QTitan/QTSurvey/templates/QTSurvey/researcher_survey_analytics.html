@@ -3,13 +3,14 @@
 {% load static %}
 
 {% load chartit %}
+{% load qtsurvey_filters %}
 {{ poschart|load_charts:"poschart" }}
 
 {% block researcher_survey_analytics %}
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
+<script src="{% static 'QTSurvey/highcharts-theme.js' %}"></script>
 
 
 <div class="survey-analysis">
@@ -19,299 +20,116 @@
 
 	<br>
 	<div class="row">
-		<div class="col-md-6"><h3 align="left">Consensus results</h3></div>
-		<div id='highChartsContainer' style="min-width: 310px; height: 400px; margin: 10 auto"></div>
+		<div class="col-md-6"><h3 align="left">Total Concensus</h3></div>
+		<div id='container' class='col-md-12' style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 		<script type='text/javascript'>
-      Highcharts.theme = {
-         colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
-            '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-         chart: {
-            backgroundColor: {
-               linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-               stops: [
-                  [0, '#2a2a2b'],
-                  [1, '#3e3e40']
-               ]
-            },
-            style: {
-               fontFamily: '\'Unica One\', sans-serif'
-            },
-            plotBorderColor: '#606063'
-         },
-         title: {
-            style: {
-               color: '#E0E0E3',
-               textTransform: 'uppercase',
-               fontSize: '20px'
-            }
-         },
-         subtitle: {
-            style: {
-               color: '#E0E0E3',
-               textTransform: 'uppercase'
-            }
-         },
-         xAxis: {
-            gridLineColor: '#707073',
-            labels: {
-               style: {
-                  color: '#E0E0E3'
-               }
-            },
-            lineColor: '#707073',
-            minorGridLineColor: '#505053',
-            tickColor: '#707073',
-            title: {
-               style: {
-                  color: '#A0A0A3'
 
-               }
-            }
-         },
-         yAxis: {
-            gridLineColor: '#707073',
-            labels: {
-               style: {
-                  color: '#E0E0E3'
-               }
-            },
-            lineColor: '#707073',
-            minorGridLineColor: '#505053',
-            tickColor: '#707073',
-            tickWidth: 1,
-            title: {
-               style: {
-                  color: '#A0A0A3'
-               }
-            }
-         },
-         tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            style: {
-               color: '#F0F0F0'
-            }
-         },
-         plotOptions: {
-            series: {
-               dataLabels: {
-                  color: '#B0B0B3'
-               },
-               marker: {
-                  lineColor: '#333'
-               }
-            },
-            boxplot: {
-               fillColor: '#505053'
-            },
-            candlestick: {
-               lineColor: 'white'
-            },
-            errorbar: {
-               color: 'white'
-            }
-         },
-         legend: {
-            itemStyle: {
-               color: '#E0E0E3'
-            },
-            itemHoverStyle: {
-               color: '#FFF'
-            },
-            itemHiddenStyle: {
-               color: '#606063'
-            }
-         },
-         credits: {
-            style: {
-               color: '#666'
-            }
-         },
-         labels: {
-            style: {
-               color: '#707073'
-            }
-         },
+				// Apply the theme
+				Highcharts.setOptions(Highcharts.theme);
 
-         drilldown: {
-            activeAxisLabelStyle: {
-               color: '#F0F0F3'
-            },
-            activeDataLabelStyle: {
-               color: '#F0F0F3'
-            }
-         },
-
-         navigation: {
-            buttonOptions: {
-               symbolStroke: '#DDDDDD',
-               theme: {
-                  fill: '#505053'
-               }
-            }
-         },
-
-         // scroll charts
-         rangeSelector: {
-            buttonTheme: {
-               fill: '#505053',
-               stroke: '#000000',
-               style: {
-                  color: '#CCC'
-               },
-               states: {
-                  hover: {
-                     fill: '#707073',
-                     stroke: '#000000',
-                     style: {
-                        color: 'white'
-                     }
-                  },
-                  select: {
-                     fill: '#000003',
-                     stroke: '#000000',
-                     style: {
-                        color: 'white'
-                     }
-                  }
-               }
-            },
-            inputBoxBorderColor: '#505053',
-            inputStyle: {
-               backgroundColor: '#333',
-               color: 'silver'
-            },
-            labelStyle: {
-               color: 'silver'
-            }
-         },
-
-         navigator: {
-            handles: {
-               backgroundColor: '#666',
-               borderColor: '#AAA'
-            },
-            outlineColor: '#CCC',
-            maskFill: 'rgba(255,255,255,0.1)',
-            series: {
-               color: '#7798BF',
-               lineColor: '#A6C7ED'
-            },
-            xAxis: {
-               gridLineColor: '#505053'
-            }
-         },
-
-         scrollbar: {
-            barBackgroundColor: '#808083',
-            barBorderColor: '#808083',
-            buttonArrowColor: '#CCC',
-            buttonBackgroundColor: '#606063',
-            buttonBorderColor: '#606063',
-            rifleColor: '#FFF',
-            trackBackgroundColor: '#404043',
-            trackBorderColor: '#404043'
-         },
-
-         // special colors for some of the
-         legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-         background2: '#505053',
-         dataLabelsColor: '#B0B0B3',
-         textColor: '#C0C0C0',
-         contrastTextColor: '#F0F0F3',
-         maskColor: 'rgba(255,255,255,0.3)'
-      };
-
-      // Apply the theme
-      Highcharts.setOptions(Highcharts.theme);
-
-      Highcharts.chart('highChartsContainer', {
-          chart: {
-              type: 'column'
-          },
-          title: {
-              text: 'Overall Population Consensus'
-          },
-          xAxis: {
-              categories: ['Question 1', 'Question 2', 'Question 3', 'Question 4', 'Question 5', 'Question 6', 'Question 7', 'Question 8', 'Question 9', 'Question 10', 'Question 11', 'Question 12', 'Question 13', 'Question 14', 'Question 15', 'Question 16', 'Question 17', 'Question 18', 'Question 19', 'Question 20', 'Question 21', 'Question 22', 'Question 23', 'Question 24', 'Question 25', 'Question 26', 'Question 27', 'Question 28', 'Question 29', 'Question 30']
-          },
-          credits: {
-              enabled: false
-          },
-          series: [{
-              name: 'Concsensus values per question',
-              data: [5, 9, -11, 18, 18, 12, 21, -17, 27, 22, 21, 22, 22, 16, -26, -26, 25, 19, 29, 17, -6, 28, -3, -12, 21, 14, 9, -23, 23, 4]
-          }]
-      });
-    </script>
+				Highcharts.chart('container', {
+						chart: {
+								type: 'column'
+						},
+						title: {
+								text: '{{ survey.title }} Consensus'
+						},
+						xAxis: {
+								categories: [{% for response in totalConsensus.names %} '{{response}}', {%endfor%}]
+						},
+						credits: {
+								enabled: false
+						},
+						series: [ 
+							{
+							name: 'Neutral Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.ntlWeights|get_item:response }}, {%endfor %}]
+							},
+							{
+							name: 'Positive Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.posWeights|get_item:response }}, {% endfor %}]
+							},
+							{
+							name: 'Negative Responses',
+							data: [{% for response in totalConsensus.names %} {{ totalConsensus.negWeights|get_item:response }}, {% endfor %}]
+							}
+							]
+				});
+		</script>
 	</div>
+
 	<br>
-  <br>
+	<br>
+
 	<div class="row">
-		<div class="col-md-12"><h3>Clusters</h3></div>
+		{% for cluster in clusters %}
+			<div class="col-md-6"><h3>{{cluster.name}}</h3></div>
+			<div class="col-md-6"><h3 align="right">Number in cluster: {{ cluster.Nodes|length }}</h3></div>
+			<div class="col-md-12">
+			<div id='{{ cluster.name }}-chart' class='col-md-12' style="min-width: 310px; height: 400px; margin: 0 width:90%"></div>
+
+				<script type="text/javascript">
+	
+				// Apply the theme
+				Highcharts.setOptions(Highcharts.theme);
+
+				Highcharts.chart('{{ cluster.name }}-chart', {
+						chart: {
+								type: 'column'
+						},
+						title: {
+								text: '{{ cluster.name }} Consensus'
+						},
+						xAxis: {
+								categories: [{% for response in cluster.weights.names %} '{{response}}', {%endfor%}]
+						},
+						credits: {
+								enabled: false
+						},
+						series: [ 
+							{
+							name: 'Neutral Responses',
+							data: [{% for response in totalConsensus.names %} {{ cluster.weights.ntlWeights|get_item:response }}, {%endfor %}]
+							},
+							{
+							name: 'Positive Responses',
+							data: [{% for response in totalConsensus.names %} {{ cluster.weights.posWeights|get_item:response }}, {% endfor %}]
+							},
+							{
+							name: 'Negative Responses',
+							data: [{% for response in totalConsensus.names %} {{ cluster.weights.negWeights|get_item:response }}, {% endfor %}]
+							}
+							]
+				});
+				
+				</script>
+			</div>
+			<div class="col-md-12">
+			<table class="table table-top-buffer">
+				<thead style="background-color: #4c5c67">
+					<th class="custom-text">ID</th>
+					<th class="custom-text">Name</th>
+					<th class="custom-text">Phone</th>
+					<th class="custom-text">Email</th>
+					<th class="custom-text"></th>
+				</thead>
+				<tbody>
+				{% for node in cluster.Nodes %}
+						<tr>
+							<td class="custom-text">{{ node.participant.userID.id }}</td>
+							<td class="custom-text">{{ node.participant.first_name|add:" "|add:node.participant.last_name }}</td>
+							<td class="custom-text">{{ node.baseDemographic.phone }}</td>
+							<td class="custom-text">{{ node.participant.email }}</td>
+						</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+		{% endfor %}
 	</div>
 
 
-  <!-- Cluster 1 -->
-	<div class="row">
-    <div class="col-md-6"><h4>Cluster 1</h4></div>
-    <div class="col-md-6"><h4 align="right">Number in cluster: 7</h4></div>
-  </div>
-
-	<div class="row"><div class="col-md-12"><h5>Most agreed responses:</h5></div></div>
-	<ul id="sortableSurveyFields">
-			<li>Question 1</li>
-			<li>Question 2</li>
-			<li>Question 3</li>
-	</ul>
-
-  <div class="row"><div class="col-md-12"><h5>Most disagreed responses:</h5></div></div>
-	<ul id="sortableSurveyFields">
-			<li>Question 20 </li>
-			<li>Question 6 </li>
-			<li>Question 9 </li>
-	</ul>
-  <br>
-
-  <!-- Cluster 2 -->
-	<div class="row">
-    <div class="col-md-6"><h4>Cluster 2</h4></div>
-    <div class="col-md-6"><h4 align="right">Number in cluster: 15</h4></div>
-  </div>
-
-  <div class="row"><div class="col-md-12"><h5>Most agreed responses:</h5></div></div>
-	<ul id="sortableSurveyFields">
-			<li>Question 2</li>
-			<li>Question 6</li>
-			<li>Question 7</li>
-	</ul>
-
-  <div class="row"><div class="col-md-12"><h5>Most disagreed responses:</h5></div></div>
-	<ul id="sortableSurveyFields">
-			<li>Question 20 </li>
-			<li>Question 6 </li>
-			<li>Question 9 </li>
-	</ul>
-  <br>
-
-  <!-- Cluster 3 -->
-	<div class="row">
-    <div class="col-md-6"><h4>Cluster 3</h4></div>
-    <div class="col-md-6"><h4 align="right">Number in cluster: 12</h4></div>
-  </div>
-
-  <div class="row"><div class="col-md-12"><h5>Most agreed responses:</h5></div></div>
-	<ul id="sortableSurveyFields">
-			<li>Question 12</li>
-			<li>Question 7</li>
-			<li>Question 15</li>
-	</ul>
-
-	<div class="row"><div class="col-md-12"><h5>Most disagreed responses:</h5></div></div>
-	<ul id="sortableSurveyFields">
-			<li>Question 29 </li>
-			<li>Question 8 </li>
-			<li>Question 16 </li>
-	</ul>
 </div>
 
 {% endblock %}
+

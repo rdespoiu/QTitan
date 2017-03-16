@@ -18,6 +18,7 @@ from .SetTemplate import setTemplate
 from .RenderPage import renderPage
 from .CSVExport import resultsToCSV
 from .GetAnalyticsData import getAnalyticsData
+from .IdentifyClusters import identifyClusters
 
 # Forms
 from .UserForm import UserForm
