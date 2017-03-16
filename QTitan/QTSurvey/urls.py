@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^irbconsent/(?P<survey_id>\w{0,50})/$', views.irb_consent_form, name='irbconsent'),
     url(r'^download/(?P<filename>.+)$', views.download, name='download'),
     url(r'^profile/(?P<profile_user>\d+)/$',views.profile_view, name = 'profile'),
+    url(r'^previewsurvey/(?P<survey_id>\w{0,50})/$', views.preview_survey, name='previewsurvey')
+
 ]

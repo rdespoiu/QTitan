@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="registration-box">
   <form method = "POST" action = "" name="form-register">
     <!-- Error messages for invalid form submission -->
@@ -16,7 +18,7 @@
         {% endfor %}
       </ul>
     {% endif %}
-
+    <p id="error-message" style="color: red;"></p>
   	{% csrf_token %}
   	<input type="text" class="form-control login-form" id="user" placeholder="username" name="username">
     <input type="text" class="form-control registration-form" id="email-address" placeholder="email" name = "email">
@@ -24,11 +26,15 @@
     <input type="password" class="form-control registration-form" id="password2" placeholder="verify password">
     <input type="text" class="form-control registration-form" id="first-name" placeholder="first name" name = first_name>
     <input type="text" class="form-control registration-form" id="last-name" placeholder="last name" name = last_name>
-    <input type="text" class="form-control registration-form" id="phone-number" placeholder="phone number (ex. 555-555-5555)" name = phone>
-    <input placeholder="date of birth" class="form-control registration-form" id="date-of-birth" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name = dob>
-    <button type="submit" class="btn btn-primary btn-block custom-button registration-form">register</button>
+    <input type="text" class="form-control registration-form" id="phone-number" placeholder="phone number (ex. 555-555-5555)" name = "phone">
+    <input type="text" class="form-control registration-form" id="date-of-birth" placeholder="date of birth (ex. 11/29/1984)" name = "dob">
+    <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="submit-registration">register</button>
     <div class="login-register-forgot">
       <a href="/login">Back to login</a><br>
     </div>
   </form>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
+<script src="{% static 'QTSurvey/phone-date-formatter.js' %}"></script>

@@ -28,10 +28,14 @@ html {
   margin-top: 2%;
 }
 
+td#clickable{
+	cursor: pointer;
+}
+
 .navigation-link a {
   color: white;
-  font-size: 1.5em;
-  opacity: 0.6;
+  font-size: 1.8em;
+  opacity: 0.9;
 }
 
 .navigation-link a:hover {
@@ -41,7 +45,6 @@ html {
 
 .custom-button {
   font-size: 1.5em;
-  opacity: 0.8;
   background-color: #343F46;
   border-color: #343F46;
 }
@@ -77,12 +80,14 @@ html {
   left: 0;
   right: 0;
   margin: auto;
+    
 }
 
 .take-survey-box ul {
   list-style-type: none;
   list-style: none;
   padding-left: 0;
+    
 }
 
 .take-survey-box ul li {
@@ -93,6 +98,7 @@ html {
   text-align: center;
   padding-top: 10px;
   padding-bottom: 10px;
+    
 }
 
 .take-survey-box ul li:focus {
@@ -105,6 +111,7 @@ html {
 .take-survey-box form input {
   background-color: #212121;
   opacity: 0.8;
+    color: #ffffff;
 }
 
 .take-survey-box form input:focus {
@@ -279,7 +286,7 @@ html {
 }
 
 .login-box form a {
-  opacity: 0.6;
+  opacity: 0.8;
   color: white;
 }
 

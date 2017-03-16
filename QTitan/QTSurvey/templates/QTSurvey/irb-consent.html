@@ -8,9 +8,10 @@
   {% csrf_token  %}
 
 
-  <center>
+
     <!-- IRB Label -->
-    <h2>Please read and digitally sign the following Institutional Review Board consent form</h2>
+    <br>
+    <center><h2>Please read and digitally sign the following Institutional Review Board consent form</h2></center>
     <br>
     <u><h3>{{ survey.title }} Consent Form</h3></u>
 
@@ -66,10 +67,10 @@
     <!-- Digitally sign -->
     <br><br>
     <h4>By selecting the below option, you consent to take part in this study.</h4>
-  </center>
 
 
-  <button type="submit" class="btn btn-primary btn-block custom-button registration-form" id="save-irbconsent">
+
+  <button type="submit" class="btn btn-primary btn-block registration-form" id="save-irbconsent">
     I, {{ request.user.first_name|add:" "|add:request.user.last_name }}, have read the above information, and have received answers to any questions I asked. I consent to take part in the study.
   </button>
   <button class="btn btn-primary btn-block custom-button-danger registration-form" id="no-consent">

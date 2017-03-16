@@ -50,3 +50,5 @@ SUBJECT_SURVEY_SELF_RESPONSE = setTemplate('QTSurvey/subject-view-survey-respons
 
 # IRB Consent
 IRB_CONSENT = setTemplate('QTSurvey/irb-consent.html')
+
+PREVIEW_SURVEY = setTemplate('QTSurvey/preview-survey.html')
