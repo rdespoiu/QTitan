@@ -38,6 +38,11 @@ class RelationGraph:
 			for c in node.connections:
 				sys.stdout.write("{}: {}, ".format(c.participant.username, node.connections[c]))
 			print("]")
+			for otherNode in node.sameresponses:
+				sys.stdout.write("{} and {} have same responses: [".format(node, otherNode))
+				for response in node.sameresponses[otherNode]:
+					sys.stdout.write("{}, ".format(response))
+				print("]")
 
 	#Connect the node to the graph. The more strongly a node agrees on a response, the stronger the connection.
 	# The sum of these agreements determines the overall connection of the node.
@@ -50,9 +55,9 @@ class RelationGraph:
 				if node == otherNode:
 					continue
 				
-				relativeWeight = self.getRelativeWeight(self.lowerInterval, self.numOptions, node, otherNode)
-				node.addConnection(otherNode, relativeWeight)
-				otherNode.addConnection(node, relativeWeight)
+				relativeWeight, sameResponses = self.getRelativeWeight(self.lowerInterval, self.numOptions, node, otherNode)
+				node.addConnection(otherNode, relativeWeight, sameResponses)
+				otherNode.addConnection(node, relativeWeight, sameResponses)
 
 				if relativeWeight > self.Strongest_Connection_val:
 					self.Strongest_Connection_val = relativeWeight
@@ -88,29 +93,34 @@ class RelationGraph:
 		posInterval = interval
 		negInterval = numOptions - interval
 		total = 0
+		sameresponses = []
 		for response in n1.responses:
 						# exit early if the response isn't significant
-			if response.orderPosition > posInterval and response.orderPosition < negInterval:
+			if response.orderPosition > posInterval and response.orderPosition <= negInterval:
 				continue
 
 			# find the same response value in n2
 			n2pos = -1
+			response2 = None
 			for r2 in n2.responses:
 				if response.surveyFieldID.value == r2.surveyFieldID.value:
 					n2pos = r2.orderPosition
+					response2 = r2
 					break
 			
 			#break early if n2's response position isn't significant
-			if n2pos > posInterval and n2pos < negInterval:
+			if n2pos > posInterval and n2pos <= negInterval:
 				continue
 
 			#add to the total if the responses are within interval - 1 of each other
 			if abs(response.orderPosition - n2pos) < interval:
+				if self.DEBUG: print("n1: {}, n2: {}, r: {}, o1: {}, o2: {}, sub: {}, i: {}".format(n1, n2, response.surveyFieldID.value, response.orderPosition, n2pos, abs(response.orderPosition - n2pos), interval))
+				sameresponses.append(response.surveyFieldID.value)
 				total += 1
 			#else: #otherwise, they are opposing viewpoints, so the relative weight loses one
 				#total -= 1
 		
-		return total
+		return total, sameresponses
 
 	def getClusters(self):
 		#Starting with the strongest connected node, create a cluster
@@ -241,18 +251,20 @@ class Node:
 		self.responses = responses
 		self.participant = participant
 		self.cluster = None
+		self.sameresponses = {}
 	
 	def __str__(self):
 		return self.participant.username
 
 	#Adds a connection between this node and the incoming node.
-	def addConnection(self, node, magnitude):
+	def addConnection(self, node, magnitude, sameresponses):
 		if node in self.connections:
 			if self.connections[node] != magnitude:
 				print("Same connection has differing magnitude?")
 			return
 		else:
 			self.connections[node] = magnitude
+			self.sameresponses[node] = sameresponses
 
 
 	def getConnectionRange(self):
