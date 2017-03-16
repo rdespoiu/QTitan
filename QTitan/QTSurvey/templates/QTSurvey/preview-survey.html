@@ -1,0 +1,33 @@
+<!-- Inheritance from base template -->
+{% extends "QTSurvey/base/base.html" %}
+{% load static %}
+
+{% block take_survey %}
+
+
+<div class="take-survey-box">
+  <center>
+    <h3>{{ survey.title }}</h3>
+    <h4>{{ survey.description }}</h4>
+  </center>
+
+  <form action="" method="POST" name="form-takesurvey">
+    {% csrf_token %}
+
+
+    <ul id="sortableSurveyFields">
+      {% for field in surveyFields %}
+        <li>{{ field.value }}</li>
+      {% endfor %}
+    </ul>
+    
+    <br><br>
+
+    </form>
+
+    
+
+</div>
+
+{% endblock %}
+
